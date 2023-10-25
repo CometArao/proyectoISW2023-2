@@ -1,8 +1,9 @@
-# Template proyecto ingeniería de software
+# Proyecto ISW - 2023/2
+# Tarjeta Vecino
 
-## Descripción
+## Integrantes
 
-- Esta es la base de codigo para el proyecto de ingeniería de software
-- Prueba 1
-- Prueba 2
-- Prueba 3 holi
+- Francisco Javier Barraza Rifo
+- Bayron Andrés Garri Mora
+- Fernanda Constanza Morales Guzmán
+- Abel Ignacio Rosales Valenzuela
