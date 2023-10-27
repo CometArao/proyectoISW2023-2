@@ -18,7 +18,7 @@ const tarjetavecinoSchema = new mongoose.Schema(
             required: true,
         },
         RUT: {
-            type: int,
+            type: String,
             required: true,
         },
         Prioridad: {

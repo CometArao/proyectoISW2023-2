@@ -5,6 +5,8 @@ const express = require("express");
 /** Enrutador de usuarios  */
 const userRoutes = require("./user.routes.js");
 
+const TarjetaVecinoRoutes = require("./TarjetaVecino.routes.js");
+
 /** Enrutador de autenticación */
 const authRoutes = require("./auth.routes.js");
 
@@ -19,5 +21,6 @@ router.use("/users", authenticationMiddleware, userRoutes);
 // Define las rutas para la autenticación /api/auth
 router.use("/auth", authRoutes);
 
+router.use("/tarjetavecino", TarjetaVecinoRoutes);
 // Exporta el enrutador
 module.exports = router;
