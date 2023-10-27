@@ -7,7 +7,11 @@ const clienteShema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  Apellidos: {
+  Apellido_Paterno: {
+    type: String,
+    required: true,
+  },
+  Apellido_Materno : {
     type: String,
     required: true,
   },
@@ -39,8 +43,19 @@ const clienteShema = new mongoose.Schema({
   },
   Discapacidad: {
     type: Boolean,
+    default: false,
     required: true,
   },
+  Adulto_Mayor: {
+    type: Boolean,
+    default: false,
+    required: true,
+  },
+   Embarazada: {
+    type: Boolean,
+    default: false,
+    required: true,  
+   },   
 
 });
 // Modelo de dstos 'cliente'
