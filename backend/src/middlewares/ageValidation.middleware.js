@@ -24,7 +24,7 @@ const ageValidation = (req, res, next) => {
 
   if (age < 18) {
     return res.status(400).json({
-      message: "El postulante debe ser mayor de edad",
+      message: "El postulante debe ser mayor de edad.",
     });
   }
 
