@@ -1,49 +1,175 @@
-// operaciones CRUD de Convenios
+"use strict";
 
-import Agreement from '../../models/agreement.model.js';
+const { respondSuccess, respondError } = require("../utils/resHandler");
+const AgreementService = require("../services/agreement.service");
+const { agreementBodySchema, agreementIdSchema } = require("../schema/agreement.schema");
+const { handleError } = require("../utils/errorHandler");
 
-export const getAgreements = async (req, res) => {
-    const agreements = await Agreement.find();
-    res.json(agreements);
-};
+/**
+ * Obtiene todos los convenios
+ * @param {Object} req - Objeto de petición
+ * @param {Object} res - Objeto de respuesta
+ */
 
-export const createAgreement = async (req, res) => {
-    const newAgreement = new Agreement(req.body);
-    const agreementSaved = await newAgreement.save();
-    res.status(201).json(agreementSaved);
-};
+async function getAgreements(req, res) {
+    try {
+        const [agreements, errorAgreements] = await AgreementService.getAgreements();
+        if (errorAgreements) return respondError(req, res, 404, errorAgreements);
 
-export const getAgreementByID = async (req, res) => {
-    const agreement = await Agreement.findById(req.params.agreementId);
-    res.status(200).json(agreement);
-};
-
-export const updateAgreementByID = async (req, res) => {
-    const updatedAgreement = await Agreement.findByIdAndUpdate(
-        req.params.agreementId,
-        req.body,
-        {
-            new: true,
-        }
-    );
-    res.status(200).json(updatedAgreement);
-};
-
-export const deleteAgreementByID = async (req, res) => {
-    await Agreement.findByIdAndDelete(req.params.agreementId);
-    // code 200 is ok too
-    res.status(204).json();
-};
-
-export const getAgreementsByRegion = async (req, res) => {
-    const agreements = await Agreement.find({ region: req.params.regionId });
-    res.json(agreements);
-};
-
-export const getAgreementsByRegionAndCommune = async (req, res) => {
-    const agreements = await Agreement.find({
-        region: req.params.regionId,
-        commune: req.params.communeId,
-    });
-    res.json(agreements);
+        agreements.length === 0 ?
+            respondSuccess(req, res, 204) :
+            respondSuccess(req, res, 200, agreements);
+    } catch (error) {
+        handleError(error, "agreement.controller -> getAgreements");
+        respondError(req, res, 400, error.message);
+    }
 }
+
+/**
+ * Obtiene convenios por región
+ * @param {Object} req - Objeto de petición
+ * @param {Object} res - Objeto de respuesta
+ */
+
+async function getAgreementsByRegion(req, res) {
+    try {
+        const { params } = req;
+        const { error: paramsError } = agreementIdSchema.validate(params);
+        if (paramsError) return respondError(req, res, 400, paramsError.message);
+
+        const [agreements, errorAgreements] = await AgreementService.getAgreementsByRegion(params.region);
+        if (errorAgreements) return respondError(req, res, 404, errorAgreements);
+
+        respondSuccess(req, res, 200, agreements);
+    } catch (error) {
+        handleError(error, "agreement.controller -> getAgreementsByRegion");
+        respondError(req, res, 400, error.message);
+    }
+}
+
+/**
+ * Obtiene convenios por región y comuna
+ * @param {Object} req - Objeto de petición
+ * @param {Object} res - Objeto de respuesta
+ */
+
+async function getAgreementsByRegionAndCommune(req, res) {
+    try {
+        const { params } = req;
+        const { error: paramsError } = agreementIdSchema.validate(params);
+        if (paramsError) return respondError(req, res, 400, paramsError.message);
+
+        const [agreements, errorAgreements] = await AgreementService.getAgreementsByRegionAndCommune(params.region, params.commune);
+        if (errorAgreements) return respondError(req, res, 404, errorAgreements);
+
+        respondSuccess(req, res, 200, agreements);
+    } catch (error) {
+        handleError(error, "agreement.controller -> getAgreementsByRegionAndCommune");
+        respondError(req, res, 400, error.message);
+    }
+}
+
+/**
+ * Crea un nuevo convenio
+ * @param {Object} req - Objeto de petición
+ * @param {Object} res - Objeto de respuesta
+ */
+
+async function createAgreement(req, res) {
+    try {
+        const { body } = req;
+        const { error: bodyError } = agreementBodySchema.validate(body);
+        if (bodyError) return respondError(req, res, 400, bodyError.message);
+
+        const [newAgreement, agreementError] = await AgreementService.createAgreement(body);
+
+        if (agreementError) return respondError(req, res, 400, agreementError);
+        if (!newAgreement) {
+            return respondError(req, res, 400, "No se creo el convenio");
+        }
+
+        respondSuccess(req, res, 201, newAgreement);
+    } catch (error) {
+        handleError(error, "agreement.controller -> createAgreement");
+        respondError(req, res, 500, "No se creo el convenio");
+    }
+}
+
+/**
+ * Obtiene un convenio por su id
+ * @param {Object} req - Objeto de petición
+ * @param {Object} res - Objeto de respuesta
+ */
+
+async function getAgreementById(req, res) {
+    try {
+        const { params } = req;
+        const { error: paramsError } = agreementIdSchema.validate(params);
+        if (paramsError) return respondError(req, res, 400, paramsError.message);
+
+        const [agreement, errorAgreement] = await AgreementService.getAgreementById(params.id);
+        if (errorAgreement) return respondError(req, res, 404, errorAgreement);
+
+        respondSuccess(req, res, 200, agreement);
+    } catch (error) {
+        handleError(error, "agreement.controller -> getAgreementById");
+        respondError(req, res, 400, error.message);
+    }
+}
+
+/**
+ * Actualiza un convenio por su id
+ * @param {Object} req - Objeto de petición
+ * @param {Object} res - Objeto de respuesta
+ */
+
+async function updateAgreement(req, res) {
+    try {
+        const { params, body } = req;
+        const { error: paramsError } = agreementIdSchema.validate(params);
+        if (paramsError) return respondError(req, res, 400, paramsError.message);
+
+        const { error: bodyError } = agreementBodySchema.validate(body);
+        if (bodyError) return respondError(req, res, 400, bodyError.message);
+
+        const [agreement, errorAgreement] = await AgreementService.updateAgreement(params.id, body);
+        if (errorAgreement) return respondError(req, res, 404, errorAgreement);
+
+        respondSuccess(req, res, 200, agreement);
+    } catch (error) {
+        handleError(error, "agreement.controller -> updateAgreement");
+        respondError(req, res, 400, error.message);
+    }
+}
+
+/**
+ * Elimina un convenio por su id
+ * @param {Object} req - Objeto de petición
+ * @param {Object} res - Objeto de respuesta
+ */
+
+async function deleteAgreement(req, res) {
+    try {
+        const { params } = req;
+        const { error: paramsError } = agreementIdSchema.validate(params);
+        if (paramsError) return respondError(req, res, 400, paramsError.message);
+
+        const [agreement, errorAgreement] = await AgreementService.deleteAgreement(params.id);
+        if (errorAgreement) return respondError(req, res, 404, errorAgreement);
+
+        respondSuccess(req, res, 200, agreement);
+    } catch (error) {
+        handleError(error, "agreement.controller -> deleteAgreement");
+        respondError(req, res, 400, error.message);
+    }
+}
+
+module.exports = {
+    getAgreements,
+    createAgreement,
+    getAgreementById,
+    updateAgreement,
+    deleteAgreement,
+    getAgreementsByRegion,
+    getAgreementsByRegionAndCommune,
+};

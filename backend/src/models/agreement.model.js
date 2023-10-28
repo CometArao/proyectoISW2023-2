@@ -1,20 +1,34 @@
+"use strict";
 // Modelo para Convenios
-
 import { Schema, model } from 'mongoose';
 
 const agreementSchema = new Schema(
     {
-        name: String,
-        description: String,
-        image: String,
-        benefit: String,
+        name: {
+            type: String,
+            required: true,
+        },
+        description: {
+            type: String,
+            required: true,
+        },
+        image: {
+            type: String,
+            required: true,
+        },
+        benefit: {
+            type: String,
+            required: true,
+        },
         region: {
             type: Schema.Types.ObjectId,
-            ref: 'Region'
+            ref: 'Region',
+            required: true,
         },
-        comuna: {
+        commune: {
             type: Schema.Types.ObjectId,
-            ref: 'Commune'
+            ref: 'Commune',
+            required: true,
         },
         exclusiveSeniors: {
             type: Boolean,
