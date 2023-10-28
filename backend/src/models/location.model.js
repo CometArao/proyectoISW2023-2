@@ -1,29 +1,32 @@
-import { Schema, model } from 'mongoose';
+"use strict";
+const mongoose = require("mongoose");
 
-const communeSchema = new Schema(
-    {
-        name: String,
-        unique: true,
+const communeSchema = new mongoose.Schema({
+    name:{
+        type: String,
+        required: true,
     },
-    {
-       
-        versionKey: false
-    }
-);
+    region: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Region',
+        required: true,
+    },
+});
 
-const regionSchema = new Schema(
-    {
-        name: String,
-        unique: true,
-        
+const regionSchema = new mongoose.Schema({
+    name: {
+      type: String,
+      required: true,
     },
-    {
-        communes: [communeSchema]
-    },
-    {   
-        versionKey: false
-    }
-);
+    comunas: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Commune',
+    }],
+  }, {
+    versionKey: false, 
+  });
 
-export const Region = model('Region', regionSchema);
-export const Commune = model('Commune', communeSchema);
+const Commune = mongoose.model('Commune', communeSchema);
+const Region = mongoose.model('Region', regionSchema);
+
+module.exports = { Region, Commune };

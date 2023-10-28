@@ -15,6 +15,10 @@ const { setupDB } = require("./config/configDB.js");
 // Importa el handler de errores
 const { handleFatalError, handleError } = require("./utils/errorHandler.js");
 const { createRoles, createUsers } = require("./config/initialSetup");
+// Importa enrutador de convenios
+const agreementRoutes = require("./routes/agreement.routes.js");
+// Importa enrutador de autenticación
+const authRoutes = require("./routes/auth.routes.js");
 
 /**
  * Inicia el servidor web
@@ -35,6 +39,10 @@ async function setupServer() {
     server.use(express.urlencoded({ extended: true }));
     // Agrega el enrutador principal al servidor
     server.use("/api", indexRoutes);
+    // Agrega el enrutador de convenios al servidor
+    server.use("/api/convenios", agreementRoutes);
+    // Agrega el enrutador de autenticación al servidor
+    server.use("/api/", authRoutes);
 
     // Inicia el servidor en el puerto especificado
     server.listen(PORT, () => {
