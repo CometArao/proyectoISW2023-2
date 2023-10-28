@@ -63,9 +63,6 @@ async function evaluarSolicitud(id) {
 
         // 4ta verificación | No tener otra tarjeta vecino
         // Se verifica si el cliente ya tiene una tarjeta vecino
-        
-
-
 
             
     } catch (error) {
