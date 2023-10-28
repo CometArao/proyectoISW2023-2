@@ -3,24 +3,40 @@
 const Joi = require("joi");
 const { Commune, Region } = require("../models/location.model");
 
-const customValidateCommunes = (value, helpers) => {
-    const region = helpers.state.ancestors[0].region;
-    if (!region) {
-        return value;
-    }
-    const communes = region.communes.map((commune) => commune.name);
+const customValidateCommunes = async (value, helpers) => {
+    try {
+        // Obtiene el objeto de la región asociada al convenio
+        const region = await helpers.state.ancestors[0].region;
 
-    if (!communes.includes(value)) {
+        if (!region) {
+            return value;
+        }
+
+        // Comprueba que la comuna pertenezca a la región
+        const commune = await Commune.findOne({ _id: value, region: region });
+
+        if (!commune) {
+            return helpers.error("any.invalid");
+        }
+    } catch (err) {
+        console.error(err);
         return helpers.error("any.invalid");
     }
-}
+};
 
-const customValidateRegions = async(value, helpers) => {
-    const region = await Region.findOne({ name: value });
-    if (!region) {
+const customValidateRegions = async (value, helpers) => {
+    try {
+        // Intenta encontrar una región con el _id proporcionado
+        const region = await Region.findOne({ _id: value });
+
+        if (!region) {
+            return helpers.error("any.invalid");
+        }
+    } catch (error) {
+        console.error(error);
         return helpers.error("any.invalid");
     }
-}
+};
 
 /**
  * Esquema de validación para el cuerpo la creación de convenio.

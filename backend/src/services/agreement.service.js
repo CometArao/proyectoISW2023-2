@@ -113,7 +113,7 @@ async function getAgreementById(id) {
 
 async function updateAgreementById(id, agreement) {
     try {
-        const {name, description, region, commune, address, phone, email, web, socialMedia} = agreement;
+        const {name, description, image, benefit, region, commune, exclusiveSeniors, exclusivePregnant, exclusiveDisability} = agreement;
 
         const agreementFound = await Agreement.findById(id);
         if (!agreementFound) return [null, "No existe el convenio"];

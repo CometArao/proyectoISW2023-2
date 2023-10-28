@@ -34,8 +34,8 @@ async function getAgreements(req, res) {
 async function getAgreementsByRegion(req, res) {
     try {
         const { params } = req;
-        const { error: paramsError } = agreementIdSchema.validate(params);
-        if (paramsError) return respondError(req, res, 400, paramsError.message);
+        // const { error: paramsError } = agreementIdSchema.validate(params);
+        // if (paramsError) return respondError(req, res, 400, paramsError.message);
 
         const [agreements, errorAgreements] = await AgreementService.getAgreementsByRegion(params.region);
         if (errorAgreements) return respondError(req, res, 404, errorAgreements);
@@ -56,8 +56,8 @@ async function getAgreementsByRegion(req, res) {
 async function getAgreementsByRegionAndCommune(req, res) {
     try {
         const { params } = req;
-        const { error: paramsError } = agreementIdSchema.validate(params);
-        if (paramsError) return respondError(req, res, 400, paramsError.message);
+        //const { error: paramsError } = agreementIdSchema.validate(params);
+        //if (paramsError) return respondError(req, res, 400, paramsError.message);
 
         const [agreements, errorAgreements] = await AgreementService.getAgreementsByRegionAndCommune(params.region, params.commune);
         if (errorAgreements) return respondError(req, res, 404, errorAgreements);
@@ -132,7 +132,7 @@ async function updateAgreement(req, res) {
         const { error: bodyError } = agreementBodySchema.validate(body);
         if (bodyError) return respondError(req, res, 400, bodyError.message);
 
-        const [agreement, errorAgreement] = await AgreementService.updateAgreement(params.id, body);
+        const [agreement, errorAgreement] = await AgreementService.updateAgreementById(params.id, body);
         if (errorAgreement) return respondError(req, res, 404, errorAgreement);
 
         respondSuccess(req, res, 200, agreement);
@@ -154,7 +154,7 @@ async function deleteAgreement(req, res) {
         const { error: paramsError } = agreementIdSchema.validate(params);
         if (paramsError) return respondError(req, res, 400, paramsError.message);
 
-        const [agreement, errorAgreement] = await AgreementService.deleteAgreement(params.id);
+        const [agreement, errorAgreement] = await AgreementService.deleteAgreementById(params.id);
         if (errorAgreement) return respondError(req, res, 404, errorAgreement);
 
         respondSuccess(req, res, 200, agreement);

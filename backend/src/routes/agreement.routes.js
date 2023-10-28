@@ -20,16 +20,15 @@ const {
 
 const router = express.Router();
 
-router.use(verifyJWT);
-
 // accesibles por todos los usuarios
 router.get("/", getAgreements);
 router.get("/:id", getAgreementById);
 router.get("/region/:region", getAgreementsByRegion);
-router.get("/region/:region/commune/:commune", getAgreementsByRegionAndCommune);
+router.get("/region/:region/comuna/:commune", getAgreementsByRegionAndCommune);
 
+router.use(verifyJWT);
 // accesibles solo por administradores
-router.post("/", isAdmin, createAgreement)
+router.post("/", isAdmin, createAgreement);
 router.put("/:id", isAdmin, updateAgreement);
 router.delete("/:id", isAdmin, deleteAgreement);
 
