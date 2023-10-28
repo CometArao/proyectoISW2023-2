@@ -1,7 +1,6 @@
 "use strict";
 const { respondSuccess, respondError } = require("../utils/resHandler");
-const SolicitudService = require("../services/solicitud.service");
-// const { solicitudBodySchema, solicitudIdSchema } = require("../schema/solicitud.schema");// 
+const SolicitudService = require("../services/cardApplication.service.js");
 const { handleError } = require("../utils/errorHandler");
 /**
  * Obtidene todas las solicitudes
@@ -29,10 +28,6 @@ async function getSolicitudes(req, res) {
  async function createSolicitud(req, res) {
     try {
         const { body } = req;
-        const { error: bodyError } = solicitudBodySchema.validate(body);
-
-        if (bodyError) return respondError(req, res, 400, bodyError.message);
-
         const [newSolicitud, solicitudError] = await SolicitudService.createSolicitud(body);
         if (solicitudError) return respondError(req, res, 400, solicitudError);
         if (!newSolicitud) {
@@ -52,11 +47,7 @@ async function getSolicitudes(req, res) {
 async function getSolicitudById(req, res) {
 try {
     const { params } = req;
-    const { error: paramsError } = solicitudIdSchema.validate(params);
-    if (paramsError) return respondError(req, res, 400, paramsError.message);
-
-    const [solicitud, errorSolicitud] = await SolicitudService.getSolicitudById(param.id);
-
+    const [solicitud, errorSolicitud] = await SolicitudService.getSolicitudById(params.id);
     if (errorSolicitud) return respondError(req, res, 404, errorSolicitud);
 respondSuccess(req, res, 200, solicitud);
 } catch (error) {
@@ -72,11 +63,8 @@ respondSuccess(req, res, 200, solicitud);
  async function updateEstado(req, res) {
   try {
      const { params, body } = req;
-        const { error: paramsError } = solicitudIdSchema.validate(params);
-        if (paramsError) return respondError(req, res, 400, paramsError.message);
-        const { error: bodyError } = solicitudBodySchema.validate(body);
-        if (bodyError) return respondError(req, res, 400, bodyError.message);
-        const [solicitud, solicitudError] = await SolicitudService.updateEstado(params.id, body);
+        const [solicitud, solicitudError] = 
+        await SolicitudService.updateEstadoById(params.id, body);
         if (solicitudError) return respondError(req, res, 400, solicitudError);
         respondSuccess(req, res, 200, solicitud);
     } catch (error) {
@@ -92,9 +80,6 @@ respondSuccess(req, res, 200, solicitud);
  async function deleteSolicitud(req, res) {
     try {
         const { params } = req;
-        const { error: paramsError } = solicitudIdSchema.validate(params);
-        if (paramsError) return respondError(req, res, 400, paramsError.message);
-
         const solicitud = await SolicitudService.deleteSolicitud(params.id);
         if (!solicitud) return respondError(req, res, 404, "no se encuentra la solicitud");
         respondSuccess(req, res, 200, solicitud);

@@ -20,73 +20,90 @@ async function getClientes() {
  * @param {object} cliente  objeto de cliente
  * @returns {Promise} promesa con el objeto de cliente creado
  */
-async function createClientes(cliente) {
+async function createClientes(clienteData) {
   try {
-    const { Nombres, Apellidos, Rut, Correo, Direccion, Comuna, Region } =
-      cliente;
-    const clienteEncontrado = await cliente.findOne({ Rut: cliente.Rut });
+    const { 
+      Nombres,
+       ApellidoPaterno,
+        ApellidoMaterno,
+         Rut,
+          FechaDeNacimiento,
+          Correo,
+           Dirección,
+            Comuna,
+             Region,
+              Discapacidad,
+               AdultoMayor,
+                Embarazada } = clienteData;
+    const clienteEncontrado = await cliente.findOne({ Rut: Rut });
     if (clienteEncontrado) return [null, "El cliente ya habia solicitado antes"];
     const nuevoCliente = new cliente({
       Nombres,
-      Apellidos,
+      ApellidoPaterno,
+      ApellidoMaterno,
       Rut,
+      FechaDeNacimiento,
       Correo,
-      Direccion,
+      Dirección,
       Comuna,
       Region,
+      Discapacidad,
+      AdultoMayor,
+      Embarazada,
     });
 
     await nuevoCliente.save();
 
-    return [nuevoCLiente, null];
+    return [nuevoCliente, null];
   } catch (error) {
     handleError(error, "cliente.service -> createCliente");
   }
 }
 /**
- * Obtiene un cliente por su rut
+ * Obtiene un cliente por su ID
+ * @param {string} Id del cliente
  * @returns {Promise}Promesa con el objeto de cliente
  */
-async function getClientesByRut(Rut) {
+async function getClientesById(id) {
   try {
-    const cliente = await cliente.findOne({ Rut: cliente.Rut });
+    const clientes = await cliente.findOne({ _id: id });
 
-    if (!cliente) return [null, "El cliente no existe"];
+    if (!clientes) return [null, "El cliente no existe"];
 
-    return [cliente, null];
+    return [clientes, null];
   } catch (error) {
     handleError(error, "cliente.service -> getClienteByRut");
   }
 }
 /**
- * Actualiza un cliente por su rut
- * @param {string} Rut rut del cliente
+ * Actualiza un cliente por su id
+ * @param {string} Id  del cliente
  * @param {object} cliente objeto de cliente
  * @returns {promisse} promesa con el objeto de cliente actualizado
  **/
-async function updateClientesByRut(Rut) {
+async function updateClientesById(id, clienteNuevo) {
   try {
-    const cliente = await cliente.findOneAndUpdate(
-      { Rut: cliente.Rut },
-      cliente,
+    const clienteActual = await cliente.findOneAndUpdate(
+      { _id: id },
+      clienteNuevo,
       { new: true },
     );
-    if (!cliente) return [null, "El cliente no existe"];
-    return [cliente, null];
+    if (!clienteActual) return [null, "El cliente no existe"];
+    return [clienteActual, null];
   } catch (error) {
     handleError(error, "cliente.service -> updateClienteByRut");
   }
 }
 /**
- * Elimina un cliente por su rut
- * @param {string} Rut rut del cliente
+ * Elimina un cliente por su id
+ * @param {string} Id  del cliente
  * @returns {Promise} promesa con el objeto de cliente eliminado
  **/
-async function deleteClientes(Rut) {
+async function deleteClientesById(id) {
   try {
-    const cliente = await cliente.findOneAndDelete({ Rut: cliente.Rut });
-    if (!cliente) return [null, "El cliente no existe"];
-    return [cliente, null];
+    const clienteEliminado = await cliente.findOneAndDelete({ _id: id });
+    if (!clienteEliminado) return [null, "El cliente no existe"];
+    return [clienteEliminado, null];
   } catch (error) {
     handleError(error, "cliente.service -> deleteCliente");
   }
@@ -95,7 +112,7 @@ async function deleteClientes(Rut) {
 module.exports = {
   getClientes,
   createClientes,
-  getClientesByRut,
-  updateClientesByRut,
-  deleteClientes,
+  getClientesById,
+  updateClientesById,
+  deleteClientesById,
 };

@@ -9,10 +9,10 @@ const { handleError } = require("../utils/errorHandler.js");
  **/
  async function createSolicitud(solicitud) {
     try {
-        const { Cliente, Fecha, Estado } = Solicitud;
-        const solicitudEncontrada = await cardApplication.findOne({ Cliente: Solicitud.Cliente });
+        const { Cliente, Fecha, Estado } = solicitud;
+        const solicitudEncontrada = await Solicitud.findOne({ Cliente: Solicitud.Cliente });
         if (solicitudEncontrada) return [null, "El cliente ya habia solicitado antes"];
-        const nuevaSolicitud = new solicitud({
+        const nuevaSolicitud = new Solicitud({
             Cliente,
             Fecha,
             Estado,
@@ -43,11 +43,9 @@ const { handleError } = require("../utils/errorHandler.js");
     **/
    async function getSolicitudById(id) {
     try {
-        const solicitud = await Solicitud.findById({ _id: id })
-            .populate("Cliente")
-            .exec();
+         const solicitud = await Solicitud.findById({ _id: id });
 
-        if (!solicitud) return [null, "La solicitud no existe"];
+           if (!solicitud) return [null, "La solicitud no existe"];
 
         return [solicitud, null];
     } catch (error) {
@@ -60,17 +58,15 @@ const { handleError } = require("../utils/errorHandler.js");
     * @param {object} solicitud objeto de solicitud
     * @returns {Promise} Promesa con el objeto de solicitud actualizado
     **/
-   async function updateSolicitudById(id, solicitud) {
+   async function updateEstadoById(id, solicitud) {
     try {
         const solicitudEncontrada = await Solicitud.findById({ _id: id });
         if (!solicitudEncontrada) return [null, "La solicitud no existe"];
 
-        const { Cliente, Fecha, Estado } = solicitud;
+        const { Estado } = solicitud;
         const solicitudActual = await Solicitud.findByIdAndUpdate(
             id,
-            {
-                Cliente,
-                Fecha,
+            {  
                 Estado,
             },
             { new: true },
@@ -97,7 +93,7 @@ module.exports = {
     createSolicitud,
     getSolicitudes,
     getSolicitudById,
-    updateSolicitudById, // modificar luego para que se actualice solo el estado
+    updateEstadoById,
     deleteSolicitud,
 
 };

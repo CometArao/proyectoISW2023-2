@@ -3,8 +3,10 @@ import { Schema, model } from 'mongoose';
 const communeSchema = new Schema(
     {
         name: String,
+        unique: true,
     },
-    {   
+    {
+       
         versionKey: false
     }
 );
@@ -12,6 +14,10 @@ const communeSchema = new Schema(
 const regionSchema = new Schema(
     {
         name: String,
+        unique: true,
+        
+    },
+    {
         communes: [communeSchema]
     },
     {   

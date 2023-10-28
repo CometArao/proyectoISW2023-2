@@ -7,19 +7,20 @@ const clienteShema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  Apellido_Paterno: {
+  ApellidoPaterno: {
     type: String,
     required: true,
   },
-  Apellido_Materno: {
+  ApellidoMaterno: {
     type: String,
     required: true,
   },
   Rut: {
     type: String,
+    unique: true,
     required: true,
   },
-  Fecha_de_nacimiento: {
+  FechaDeNacimiento: {
     type: String,
     required: true,
   },
@@ -46,7 +47,7 @@ const clienteShema = new mongoose.Schema({
     default: false,
     required: true,
   },
-  Adulto_Mayor: {
+  AdultoMayor: {
     type: Boolean,
     default: false,
     required: true,
