@@ -1,11 +1,14 @@
 "use strict";
 
+// Importa el modulo 'express' para crear las rutas
 const express = require("express");
 
-import { isAdmin } from "../middlewares/authorization.middleware";
-import { authenticationMiddleware } from "../middlewares/authentication.middleware";
+// Importa el middleware de autorización
+const {isAdmin} = require("../middlewares/authorization.middleware.js");
+// Importa el middleware de autenticación
+const verifyJWT = require("../middlewares/authentication.middleware.js");
 
-import {
+const {
   getAgreements,
   getAgreementById,
   getAgreementsByRegion,
@@ -13,11 +16,11 @@ import {
   createAgreement,
   updateAgreement,
   deleteAgreement,
-} from "../controllers/agreement.controller";
+} = require("../controllers/agreement.controller");
 
 const router = express.Router();
 
-router.use(authenticationMiddleware);
+router.use(verifyJWT);
 
 // accesibles por todos los usuarios
 router.get("/", getAgreements);
@@ -26,6 +29,8 @@ router.get("/region/:region", getAgreementsByRegion);
 router.get("/region/:region/commune/:commune", getAgreementsByRegionAndCommune);
 
 // accesibles solo por administradores
-router.post("/", isAdmin, createAgreement);
+router.post("/", isAdmin, createAgreement)
 router.put("/:id", isAdmin, updateAgreement);
 router.delete("/:id", isAdmin, deleteAgreement);
+
+module.exports = router;

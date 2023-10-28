@@ -1,7 +1,7 @@
 // Importa información de comunas y regiones de Chile para ser almacenado en la Base de Datos como datos de referencia
-import fs from 'fs';
-import mongoose from 'mongoose';
-import { Region, Commune } from './models/location.model.js';
+const fs = require('fs');
+const mongoose = require('mongoose');
+const { Region, Commune } = require('./models/location.model.js');
 
 // Conexion a la base de datos
 mongoose.connect('mongodb+srv://franciscobarraza2001:go1ALvPVgcM0Uw5k@tarjetavecino.p0dqavf.mongodb.net/?retryWrites=true&w=majority&appName=AtlasApp', { useNewUrlParser: true, useUnifiedTopology: true })

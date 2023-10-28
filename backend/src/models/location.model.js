@@ -1,7 +1,7 @@
 "use strict";
-import { Schema, model } from 'mongoose';
+const mongoose = require("mongoose");
 
-const communeSchema = new Schema(
+const communeSchema = new mongoose.Schema(
     {
         name: String,
     },
@@ -10,7 +10,7 @@ const communeSchema = new Schema(
     }
 );
 
-const regionSchema = new Schema(
+const regionSchema = new mongoose.Schema(
     {
         name: String,
         communes: [communeSchema]
@@ -20,5 +20,7 @@ const regionSchema = new Schema(
     }
 );
 
-export const Region = model('Region', regionSchema);
-export const Commune = model('Commune', communeSchema);
+const Region = mongoose.model('Region', regionSchema);
+const Commune = mongoose.model('Commune', communeSchema);
+
+module.exports = { Region, Commune };

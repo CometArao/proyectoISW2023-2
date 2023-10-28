@@ -1,8 +1,8 @@
 "use strict";
 // Modelo para Convenios
-import { Schema, model } from 'mongoose';
+const mongoose = require("mongoose");
 
-const agreementSchema = new Schema(
+const agreementSchema = new mongoose.Schema(
     {
         name: {
             type: String,
@@ -21,12 +21,12 @@ const agreementSchema = new Schema(
             required: true,
         },
         region: {
-            type: Schema.Types.ObjectId,
+            type: mongoose.Schema.Types.ObjectId,
             ref: 'Region',
             required: true,
         },
         commune: {
-            type: Schema.Types.ObjectId,
+            type: mongoose.Schema.Types.ObjectId,
             ref: 'Commune',
             required: true,
         },
@@ -49,4 +49,6 @@ const agreementSchema = new Schema(
     }
 );
 
-export default model('Agreement', agreementSchema);
+const Agreement = mongoose.model('Agreement', agreementSchema);
+
+module.exports = Agreement;

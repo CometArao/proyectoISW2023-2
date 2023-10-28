@@ -1,7 +1,7 @@
 "use strict";
 
-import Agreement from "../../models/agreement.model.js";
-const {handleError} = require("../../utils/errorHandler");
+const Agreement = require("../models/agreement.model.js");
+const {handleError} = require("../utils/errorHandler");
 
 /**
 * Obtiene todos los convenios de la base de datos
