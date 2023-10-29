@@ -44,6 +44,16 @@ async function setupServer() {
     // Agrega el enrutador de autenticación al servidor
     server.use("/api/", authRoutes);
 
+    // Agrega el middleware para el manejo de errores de multer
+    server.use((err, req, res, next) => {
+      if (err instanceof multer.MulterError) {
+        res.status(400).send({ message: "Error al subir el archivo." });
+      } else if (err) {
+        res.status(500).send({ message: err.message });
+      }
+    });
+
+    
     // Inicia el servidor en el puerto especificado
     server.listen(PORT, () => {
       console.log(`=> Servidor corriendo en ${HOST}:${PORT}/api`);

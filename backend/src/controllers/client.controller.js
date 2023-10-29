@@ -1,7 +1,10 @@
 "use strict";
-const { respondSuccess, respondError } = require("../utils/resHandler");
+// const axios = require("axios");
+// const { API_KEY } = require("../config/configEnv.js");
+const { validationResult, check } = require("express-validator");
+const { respondSuccess, respondError } = require("../utils/resHandler.js");
 const clienteService = require("../services/client.service.js");
-const { handleError } = require("../utils/errorHandler");
+const { handleError } = require("../utils/errorHandler.js");
 
 /**
  * Crea un nuevo cliente
@@ -11,17 +14,89 @@ const { handleError } = require("../utils/errorHandler");
 async function createCliente(req, res) {
   try {
     const { body } = req;
-    const [newCliente, clienteError] = await clienteService.createClientes(body);
-    if (clienteError) return respondError(req, res, 400, clienteError);
-    if (!newCliente) {
-      return respondError(req, res, 400, "No se creo el cliente");
+    // Validaciones para Nombres, Apellidos y Rut.
+    check(req.Nombres, "Nombres son requeridos").notEmpty();
+    check("ApellidoPaterno", "Apellido Paterno es requerido").notEmpty();
+    check("ApellidoMaterno", "Apellido Materno es requerido").notEmpty();
+    check(req.Rut, "Rut no válido").matches(/^\d{2}\.\d{3}\.\d{3}-\d{1}$/);
+
+ // Validación para Correo.
+    check("Correo", "Formato de correo electrónico no válido").isEmail();
+ 
+    // Validación de dirección con Google Maps Geocoding API.
+        // Si la dirección es válida, puedes continuar con la creación del cliente.
+   // const direccionValida = await verificarDireccionEnGoogleMaps(body.Dirección);
+
+// Si la dirección no es válida, puedes agregar un error a las validaciones.
+
+   // if (!direccionValida) {
+    //  return respondError(req, res, 400, "La dirección proporcionada no es válida.");
+   // }
+    
+    // Validación para campos obligatorios.
+const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return respondError(req, res, 400, errors.array());
     }
-    respondSuccess(req, res, 201, newCliente);
-  } catch (error) {
-    handleError(error, "cliente.controller -> createCliente");
-    respondError(req, res, 500, "No se creo el cliente");
-  }
+    if (
+ 
+      !body.Nombres ||
+      !body.ApellidoPaterno ||
+     !body.ApellidoMaterno ||
+      !body.Rut ||
+      !body.Correo
+       // Agregar más campos requeridos según tu modelo.
+    ) {
+      return respondError(req, res, 400, "Todos los campos son obligatorios");
+    }
+     // Validación para formato de documentos en PDF.
+    // Debes verificar que los documentos sean PDF por separado. 
+    // Puedes utilizar la extensión del archivo para hacer esta validación.
+
+      // Validación para una sola solicitud a la vez.
+    // Aquí debes implementar lógica adicional para verificar si el usuario ya tiene una solicitud activa.
+
+  // Resto del código para la creación del cliente.
+   const [newCliente, clienteError] = await clienteService.createClientes(body);
+    if (clienteError) return respondError(req, res, 400, clienteError);
+      if (!newCliente) {
+        return respondError(req, res, 400, "No se creo el cliente");
+      }
+      respondSuccess(req, res, 201, newCliente);
+    } catch (error) {
+      handleError(error, "client.controller -> createCliente");
+      respondError(req, res, 500, "No se creo el cliente");
+    }
 }
+// Aquí debes realizar una verificación con Google Maps o una API de geocodificación.
+// eslint-disable-next-line require-jsdoc
+/* async function verificarDireccionEnGoogleMaps(direccion) {
+  try {
+    // eslint-disable-next-line max-len, no-unused-vars
+    const apiKey =API_KEY; // Reemplaza con tu clave de API de Google Maps.
+    // eslint-disable-next-line no-unused-vars
+    const direccionEncoded = encodeURIComponent(direccion);
+    // eslint-disable-next-line max-len
+    const url = "https://maps.googleapis.com/maps/api/geocode/json?address=${direccionEncoded}&key=${apiKey}";
+
+    const response = await axios(url);
+    if (response.status === 200) {
+    const data = response.json();
+
+    if (data.status === "OK" && data.results.length > 0) {
+      // Si la API de Google Maps devuelve un resultado válido, consideramos la dirección válida.
+      return true;
+    }
+  }
+
+    return false;
+  } catch (error) {
+    handleError(error, "client.controller -> verificarDireccionEnGoogleMaps");
+    return false;
+  }
+} */  
+
 /**
  * Obtiene un cliente por su id
  * @param {Object} req - Objeto de petición

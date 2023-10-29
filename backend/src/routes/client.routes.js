@@ -5,15 +5,29 @@ const express = require("express");
 const { isAdmin } = require("../middlewares/authorization.middleware.js");
 // Importa el middleware de autenticación
 const verifyJWT= require("../middlewares/authentication.middleware.js");
+/** Middleware multer */
+const upload = require("../config/configMulter.js");
 /** Controlador de clientes */
 const clienteController = require("../controllers/client.controller.js");
 /** Instancia del encrutador */
 const router = express.Router();
+// Accesible  por usuarios
+router.post("/", clienteController.createCliente);
 
+// define ruta para subir archivos
+router.post("/upload", upload.single("pdf"), (req, res) => {
+    if (req.file) {
+      res.json({
+        success: true,
+        file: req.file.filename,
+      });
+    } else {
+      res.status(400).json({ success: false, message: "Error al subir el archivo" });
+    }
+  });
+  
 router.use(verifyJWT);
-// Accesible solo por administradores
- router.get("/", isAdmin, clienteController.getClientes);
-router.post("/", isAdmin, clienteController.createCliente);
+// Accesible solo por administradoresrouter.get("/", isAdmin, clienteController.getClientes);
 router.get("/:id", isAdmin, clienteController.getClientesById);
  router.put("/:id", isAdmin, clienteController.updateClientesById);
 router.delete("/:id", isAdmin, clienteController.deleteClientesById);

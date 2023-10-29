@@ -33,13 +33,12 @@ const clienteShema = new mongoose.Schema({
     required: true,
   },
   Comuna: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: String,
     ref: "Commune",
     required: true,
   },
   Region: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Region",
+    type: String,
     required: true,
   },
   Discapacidad: {
