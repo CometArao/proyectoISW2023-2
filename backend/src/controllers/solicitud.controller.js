@@ -14,7 +14,7 @@ async function getSolicitudes(req, res) {
 
         solicitudes.length === 0
             ? respondSuccess(req, res, 204)
-            : respondSuccess(req, res, 200, solicitudes);     
+            : respondSuccess(req, res, 200, solicitudes);
     } catch (error) {
         handleError(error, "solicitud.controller -> getSolicitudes");
         respondError(req, res, 400, error.message);
@@ -28,6 +28,7 @@ async function getSolicitudes(req, res) {
  async function createSolicitud(req, res) {
     try {
         const { body } = req;
+
         const [newSolicitud, solicitudError] = await SolicitudService.createSolicitud(body);
         if (solicitudError) return respondError(req, res, 400, solicitudError);
         if (!newSolicitud) {

@@ -70,12 +70,12 @@ async function evaluarSolicitud(id) {
     }
 }
 
-async function enviarNotificacion(correo){
-    const mailOptions = {
-        from: "municipalidadX@gmail.com",
-        to: correo,
-        subject: "Solicitud de permiso",
-        text: "Su solicitud ha sido aceptada",
-    };
+    async function enviarNotificacion(correo){
+        const mailOptions = {
+            from: "municipalidadX@gmail.com",
+            to: correo,
+            subject: "Solicitud de permiso",
+            text: "Su solicitud ha sido aceptada",
+        };
 
 }

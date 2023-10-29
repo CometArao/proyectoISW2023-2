@@ -9,7 +9,7 @@ const solicitudSchema = new mongoose.Schema({
     },
 
     Fecha: {
-        type: String,
+        type: Date,
         required: true,
     },
     Estado: {
