@@ -29,10 +29,10 @@ router.post("/upload", upload.single("pdf"), (req, res) => {
     }
   });
   
-router.use(verifyJWT);
-// Accesible solo por administradoresrouter.get("/", isAdmin, clienteController.getClientes);
-// Accesible solo por administradores
-router.post("/", ageValidation, validateRut, clienteController.createCliente);
+  // Accesible solo por administradoresrouter.get("/", isAdmin, clienteController.getClientes);
+  // Accesible solo por administradores
+  router.post("/", ageValidation, validateRut, clienteController.createCliente);
+  router.use(verifyJWT);
 router.post("/", isAdmin, clienteController.createCliente);
 router.use(verifyJWT);
 router.get("/", isAdmin, clienteController.getClientes);

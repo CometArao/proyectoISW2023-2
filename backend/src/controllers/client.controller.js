@@ -14,14 +14,10 @@ const { handleError } = require("../utils/errorHandler.js");
 async function createCliente(req, res) {
   try {
     const { body } = req;
-    // Validaciones para Nombres, Apellidos y Rut.
-    check(req.Nombres, "Nombres son requeridos").notEmpty();
-    check("ApellidoPaterno", "Apellido Paterno es requerido").notEmpty();
-    check("ApellidoMaterno", "Apellido Materno es requerido").notEmpty();
-    check(req.Rut, "Rut no válido").matches(/^\d{2}\.\d{3}\.\d{3}-\d{1}$/);
-
- // Validación para Correo.
-    check("Correo", "Formato de correo electrónico no válido").isEmail();
+    // Validaciones 
+  
+ // Validación para Correo
+    check(req.Correo, "Formato de correo electrónico no válido").isEmail();
  
     // Validación de dirección con Google Maps Geocoding API.
         // Si la dirección es válida, puedes continuar con la creación del cliente.
@@ -63,7 +59,7 @@ const errors = validationResult(req);
     const parts = body.FechaDeNacimiento.split("/");
     const convertedDate = new Date(parts[2], parts[1] - 1, parts[0]);
     body.FechaDeNacimiento = convertedDate;
-    
+
   // Resto del código para la creación del cliente.
    const [newCliente, clienteError] = await clienteService.createClientes(body);
     if (clienteError) return respondError(req, res, 400, clienteError);
