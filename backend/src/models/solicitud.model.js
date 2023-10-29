@@ -8,11 +8,11 @@ const solicitudSchema = new mongoose.Schema({
         required: true,
     },
 
-    Fecha_de_solicitud: {
+    Fecha: {
         type: String,
         required: true,
     },
-    Estado_Solicitud: {
+    Estado: {
         type: String,
         enum: ["Aceptado", "Rechazado", "Pendiente", "Derivado"],
         default: "Pendiente",
