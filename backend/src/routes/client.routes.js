@@ -8,11 +8,13 @@ const verifyJWT= require("../middlewares/authentication.middleware.js");
 const ageValidation = require("../middlewares/ageValidation.middleware.js");
 /** Controlador de clientes */
 const clienteController = require("../controllers/client.controller.js");
+
+const validateRut = require("../middlewares/rutValidation.middleware.js");
 /** Instancia del encrutador */
 const router = express.Router();
 
 // Accesible solo por administradores
-router.post("/", ageValidation, clienteController.createCliente);
+router.post("/", ageValidation, validateRut, clienteController.createCliente);
 router.post("/", isAdmin, clienteController.createCliente);
 router.use(verifyJWT);
 router.get("/", isAdmin, clienteController.getClientes);
