@@ -1,4 +1,5 @@
 "use strict";
+const moment = require("moment");
 const mongoose = require("mongoose");
 
 // creación de esquema de la colección clientes
@@ -21,7 +22,7 @@ const clienteShema = new mongoose.Schema({
     required: true,
   },
   FechaDeNacimiento: {
-    type: String,
+    type: Date,
     required: true,
   },
   Correo: {
@@ -33,13 +34,11 @@ const clienteShema = new mongoose.Schema({
     required: true,
   },
   Comuna: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Commune",
+    type: String,
     required: true,
   },
   Region: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Region",
+    type: String,
     required: true,
   },
   Discapacidad: {
@@ -59,6 +58,15 @@ const clienteShema = new mongoose.Schema({
    },
 
 });
+
+  clienteShema.set("toJSON", {
+    virtuals: true,
+    versionKey: false,
+    transform: function (doc, ret) {
+        delete ret._id;
+        ret.FechaDeNacimiento = moment(ret.FechaDeNacimiento).format("DD/MM/YYYY");
+    }
+  });
 // Modelo de dstos 'cliente'
 const cliente = mongoose.model("cliente", clienteShema);
 // Ecportación del modelo de datos 'cliente'
