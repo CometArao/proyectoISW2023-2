@@ -7,8 +7,11 @@ const { isAdmin } = require("../middlewares/authorization.middleware.js");
 const verifyJWT= require("../middlewares/authentication.middleware.js");
 /** Middleware multer */
 const upload = require("../config/configMulter.js");
+const ageValidation = require("../middlewares/ageValidation.middleware.js");
 /** Controlador de clientes */
 const clienteController = require("../controllers/client.controller.js");
+
+const validateRut = require("../middlewares/rutValidation.middleware.js");
 /** Instancia del encrutador */
 const router = express.Router();
 // Accesible  por usuarios
@@ -28,6 +31,11 @@ router.post("/upload", upload.single("pdf"), (req, res) => {
   
 router.use(verifyJWT);
 // Accesible solo por administradoresrouter.get("/", isAdmin, clienteController.getClientes);
+// Accesible solo por administradores
+router.post("/", ageValidation, validateRut, clienteController.createCliente);
+router.post("/", isAdmin, clienteController.createCliente);
+router.use(verifyJWT);
+router.get("/", isAdmin, clienteController.getClientes);
 router.get("/:id", isAdmin, clienteController.getClientesById);
  router.put("/:id", isAdmin, clienteController.updateClientesById);
 router.delete("/:id", isAdmin, clienteController.deleteClientesById);

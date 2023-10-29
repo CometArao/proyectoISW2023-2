@@ -6,12 +6,13 @@
 const verifyJWT= require("../middlewares/authentication.middleware.js");
 /** Controlador de solicitudes */
 const solicitudController = require("../controllers/solicitud.controller.js");
+const solicitudFechaValidation = require("../middlewares/solicitudFechaValidation.middleware.js");
 /** Instancia del encrutador */
 const router = express.Router();
 
 // Define las rutas para  solicitudes que solo ven los usuarios
 router.get("/", solicitudController.getSolicitudes);
-router.post("/", solicitudController.createSolicitud);
+router.post("/", solicitudFechaValidation, solicitudController.createSolicitud);
 // Rutas para administrador
 router.use(verifyJWT);
 router.get("/:id", isAdmin, solicitudController.getSolicitudById);

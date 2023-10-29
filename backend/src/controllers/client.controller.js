@@ -57,6 +57,13 @@ const errors = validationResult(req);
       // Validación para una sola solicitud a la vez.
     // Aquí debes implementar lógica adicional para verificar si el usuario ya tiene una solicitud activa.
 
+
+
+    // Convertir la fecha de nacimiento de formato DD/MM/YYYY a objeto Date
+    const parts = body.FechaDeNacimiento.split("/");
+    const convertedDate = new Date(parts[2], parts[1] - 1, parts[0]);
+    body.FechaDeNacimiento = convertedDate;
+    
   // Resto del código para la creación del cliente.
    const [newCliente, clienteError] = await clienteService.createClientes(body);
     if (clienteError) return respondError(req, res, 400, clienteError);
