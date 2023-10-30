@@ -43,19 +43,22 @@ const customValidateRegions = async (value, helpers) => {
  * @constant {Object}
  */
 const agreementBodySchema = Joi.object({
-    name: Joi.string().required().messages({
+    name: Joi.string().min(2).max(100).required().messages({
         "string.empty": "El nombre no puede estar vacío.",
         "any.required": "El nombre es obligatorio.",
         "string.base": "El nombre debe ser de tipo string.",
+        "string.min": "El nombre debe tener al menos {#limit} caracteres.",
+        "string.max": "El nombre debe tener un máximo de {#limit} caracteres.",
     }),
-    description: Joi.string().required().messages({
+    description: Joi.string().min(10).max(500).required().messages({
         "string.empty": "La descripción no puede estar vacía.",
         "any.required": "La descripción es obligatoria.",
         "string.base": "La descripción debe ser de tipo string.",
+        "string.min": "La descripción debe tener al menos {#limit} caracteres.",
+        "string.max": "La descripción debe tener un máximo de {#limit} caracteres.",
     }),
-    image: Joi.string().required().messages({
+    image: Joi.string().messages({
         "string.empty": "La imagen no puede estar vacía.",
-        "any.required": "La imagen es obligatoria.",
         "string.base": "La imagen debe ser de tipo string.",
     }),
     benefit: Joi.string().required().messages({
