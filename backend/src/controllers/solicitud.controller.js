@@ -49,10 +49,6 @@ async function getSolicitudes(req, res) {
             return respondError(req, res, 400, solicitudError);
         }
 
-        if (!newSolicitud) {
-            return respondError(req, res, 400, "No se creo la solicitud XD");
-        }
-
         respondSuccess(req, res, 201, newSolicitud);
     } catch (error) {
         handleError(error, "solicitud.controller -> createSolicitud");
@@ -76,6 +72,21 @@ respondSuccess(req, res, 200, solicitud);
     respondError(req, res, 500, "No se obtuvo la solicitud");
     }
 }
+
+// Se crea una función para que el administrador pueda ver los documentos de un cliente de x solicitud
+async function getDocumentos(req, res) {
+    try {
+        const { params } = req;
+        const [solicitud, errorSolicitud] = await SolicitudService.getSolicitudById(params.id);
+        if (errorSolicitud) return respondError(req, res, 404, errorSolicitud);
+        respondSuccess(req, res, 200, solicitud);
+    } catch (error) {
+        handleError(error, "solicitud.controller -> getSolicitudById");
+        respondError(req, res, 500, "No se obtuvo la solicitud");
+    }
+}
+
+
 /**
  * Actualiza el estado de la solicitud por su id
  * @param {Object} req - Objeto de petición

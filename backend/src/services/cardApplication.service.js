@@ -14,8 +14,10 @@ async function createSolicitud(solicitud) {
     const solicitudEncontrada = await Solicitud.findOne({
       Cliente: Solicitud.Cliente,
     });
-    if (solicitudEncontrada)
-      return [null, "El cliente ya habia solicitado antes"];
+    if (solicitudEncontrada) {
+        return [null, "El cliente ya habia solicitado antes"];
+    }
+
     const nuevaSolicitud = new Solicitud({
       Cliente,
       Fecha,
@@ -107,11 +109,6 @@ async function updateEstadoById(id, solicitud) {
     */
    async function deleteSolicitud(id) {
     try {
-    return await Solicitud.findByIdAndDelete({ _id: id });
- } catch (error) {
-        handleError(error, "solicitud.service -> deleteSolicitud");
-    }
-
     const { Estado, MotivoRechazo } = solicitud;
     const solicitudActual = await Solicitud.findByIdAndUpdate(
       id,

@@ -1,6 +1,7 @@
 "use strict";
 const { respondError } = require("../utils/resHandler.js");
 const fechaRegex = /^\d{2}\/\d{2}\/\d{4}$/; // Para validar el formato "DD/MM/YYYY"
+const moment = require("moment");
 
 /**
  * Verifica que la fecha en la solicitud tenga el formato "DD/MM/YYYY".

@@ -1,5 +1,6 @@
 "use strict";
 const mongoose = require("mongoose");
+const moment = require("moment");
 
 const solicitudSchema = new mongoose.Schema({
     Cliente: {
@@ -23,5 +24,14 @@ const solicitudSchema = new mongoose.Schema({
         required: false,
     },
     });
+
+    solicitudSchema.set("toJSON", {
+        virtuals: true,
+        versionKey: false,
+        transform: function(doc, ret) {
+            delete ret._id;
+            ret.Fecha = moment(ret.Fecha).format("DD/MM/YYYY");
+        }
+      });
 
 module.exports = mongoose.model("Solicitud", solicitudSchema);
