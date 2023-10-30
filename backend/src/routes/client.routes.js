@@ -33,7 +33,7 @@ router.post("/",
  },
  validarCamposRequeridos,
  validateRut,
- ageValidation, 
+ ageValidation,
  verificarFormatoCorreo, 
  clienteController.createCliente,
 );

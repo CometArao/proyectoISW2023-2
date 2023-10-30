@@ -14,6 +14,7 @@ const fechaRegex = /^\d{2}\/\d{2}\/\d{4}$/; // Para validar el formato "DD/MM/YY
  */
 
   
+  
   const ageValidation = (req, res, next) => {
     if (!fechaRegex.test(req.body.FechaDeNacimiento)) {
       return res.status(400).json({

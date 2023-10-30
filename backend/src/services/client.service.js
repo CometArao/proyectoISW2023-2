@@ -37,10 +37,7 @@ async function createClientes(clienteData) {
                 Embarazada,
                 preferenciaTarjeta } = clienteData;
     const clienteEncontrado = await cliente.findOne({ Rut: Rut });
-
-    if (clienteEncontrado) {
-      return [null, "El cliente ya habia solicitado antes"];
-    }
+    if (clienteEncontrado) return [null, "El cliente ya está ingresado en la plataforma."];
     const nuevoCliente = new cliente({
       Nombres,
       ApellidoPaterno,

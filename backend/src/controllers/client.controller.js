@@ -173,7 +173,6 @@ async function getClientes(req, res) {
       respondError(req, res, 500, "No se elimino el cliente");
     }
   }
-}
 
 module.exports = {
   createCliente,
