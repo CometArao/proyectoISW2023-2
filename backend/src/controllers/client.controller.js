@@ -62,8 +62,10 @@ async function createCliente(req, res) {
     const convertedDate = new Date(parts[2], parts[1] - 1, parts[0]);
     body.FechaDeNacimiento = convertedDate;
 
+
   // Resto del código para la creación del cliente.
    const [newCliente, clienteError] = await clienteService.createClientes(body);
+
     if (clienteError) return respondError(req, res, 400, clienteError);
       if (!newCliente) {
         return respondError(req, res, 400, "No se creo el cliente");
@@ -110,7 +112,9 @@ async function createCliente(req, res) {
 async function getClientesById(req, res) {
   try {
     const { params } = req;
-    const [cliente, errorCliente] = await clienteService.getClientesById(params.id);
+    const [cliente, errorCliente] = await clienteService.getClientesById(
+      params.id,
+    );
     if (errorCliente) return respondError(req, res, 404, errorCliente);
     respondSuccess(req, res, 200, cliente);
   } catch (error) {
@@ -137,14 +141,15 @@ async function getClientes(req, res) {
   }
 }
 /**
- * Actualiza un cliente por su id 
+ * Actualiza un cliente por su id
  * @param {Object} req - Objeto de petición
  * @param {Object} res - Objeto de respuesta
  */
+
  async function updateClientesById(req, res) {
     try {
       const { params, body } = req;
-      const [cliente, clienteError] = await clienteService.updateClientesById(params.Rut, body);
+      const [cliente, clienteError] = await clienteService.updateClientesById(params.id, body);
       if (clienteError) return respondError(req, res, 404, clienteError);
       respondSuccess(req, res, 200, cliente);
     } catch (error) {
@@ -168,12 +173,12 @@ async function getClientes(req, res) {
       respondError(req, res, 500, "No se elimino el cliente");
     }
   }
+}
 
 module.exports = {
-    createCliente,
-    getClientes,
-    getClientesById,
-    updateClientesById,
-    deleteClientesById,
+  createCliente,
+  getClientes,
+  getClientesById,
+  updateClientesById,
+  deleteClientesById,
 };
-
