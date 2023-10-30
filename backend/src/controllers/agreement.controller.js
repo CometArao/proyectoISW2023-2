@@ -5,6 +5,8 @@ const AgreementService = require("../services/agreement.service");
 const { agreementBodySchema, agreementIdSchema } = require("../schema/agreement.schema");
 const { handleError } = require("../utils/errorHandler");
 const { uploadImg } = require("../config/configMulterImages");
+const Agreement = require("../models/agreement.model");
+const fs = require("fs");
 
 /**
  * Obtiene todos los convenios
@@ -136,22 +138,65 @@ async function getAgreementById(req, res) {
 
 async function updateAgreement(req, res) {
     try {
-        const { params, body } = req;
+        const { params, body, file } = req;
         const { error: paramsError } = agreementIdSchema.validate(params);
         if (paramsError) return respondError(req, res, 400, paramsError.message);
 
-        const { error: bodyError } = agreementBodySchema.validate(body);
-        if (bodyError) return respondError(req, res, 400, bodyError.message);
+        // Verificar si el convenio con el ID proporcionado existe
+        const existingAgreement = await Agreement.findById(params.id);
+        if (!existingAgreement) {
+            return respondError(req, res, 404, "Convenio no encontrado");
+        }
 
-        const [agreement, errorAgreement] = await AgreementService.updateAgreementById(params.id, body);
-        if (errorAgreement) return respondError(req, res, 404, errorAgreement);
+        // Eliminar la imagen anterior si se proporciona una nueva imagen
+        if (file) {
+            if (existingAgreement.image !== 'default.jpg') {
+                // Elimina la imagen anterior (excepto 'default.jpg')
+                fs.unlinkSync(`./src/data/images/${existingAgreement.image}`);
+            }
+            // Asigna el nombre de la nueva imagen
+            existingAgreement.image = file.filename;
+        }
 
-        respondSuccess(req, res, 200, agreement);
+        // Validar y actualizar otros campos del convenio
+        if (body.name) existingAgreement.name = body.name;
+        if (body.description) existingAgreement.description = body.description;
+        if (body.benefit) existingAgreement.benefit = body.benefit;
+        if (body.region) existingAgreement.region = body.region;
+        if (body.commune) existingAgreement.commune = body.commune;
+        if (body.exclusiveSeniors !== undefined) existingAgreement.exclusiveSeniors = body.exclusiveSeniors;
+        if (body.exclusivePregnant !== undefined) existingAgreement.exclusivePregnant = body.exclusivePregnant;
+        if (body.exclusiveDisability !== undefined) existingAgreement.exclusiveDisability = body.exclusiveDisability;
+        
+        // Guardar el convenio actualizado
+        const updatedAgreement = await existingAgreement.save();
+
+        // Responder con el convenio actualizado
+        respondSuccess(req, res, 200, updatedAgreement);
     } catch (error) {
         handleError(error, "agreement.controller -> updateAgreement");
         respondError(req, res, 400, error.message);
     }
 }
+
+// async function updateAgreement(req, res) {
+//     try {
+//         const { params, body } = req;
+//         const { error: paramsError } = agreementIdSchema.validate(params);
+//         if (paramsError) return respondError(req, res, 400, paramsError.message);
+
+//         const { error: bodyError } = agreementBodySchema.validate(body);
+//         if (bodyError) return respondError(req, res, 400, bodyError.message);
+
+//         const [agreement, errorAgreement] = await AgreementService.updateAgreementById(params.id, body);
+//         if (errorAgreement) return respondError(req, res, 404, errorAgreement);
+
+//         respondSuccess(req, res, 200, agreement);
+//     } catch (error) {
+//         handleError(error, "agreement.controller -> updateAgreement");
+//         respondError(req, res, 400, error.message);
+//     }
+// }
 
 /**
  * Elimina un convenio por su id

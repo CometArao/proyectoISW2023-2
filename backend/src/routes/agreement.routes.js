@@ -31,7 +31,7 @@ router.get("/region/:region/comuna/:commune", getAgreementsByRegionAndCommune);
 router.use(verifyJWT);
 // accesibles solo por administradores
 router.post("/", isAdmin, uploadImg.single('image'), createAgreement);
-router.put("/:id", isAdmin, updateAgreement);
+router.put("/:id", isAdmin, uploadImg.single('image'), updateAgreement);
 router.delete("/:id", isAdmin, deleteAgreement);
 
 module.exports = router;
