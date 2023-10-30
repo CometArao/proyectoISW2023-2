@@ -4,6 +4,7 @@ const { respondSuccess, respondError } = require("../utils/resHandler");
 const AgreementService = require("../services/agreement.service");
 const { agreementBodySchema, agreementIdSchema } = require("../schema/agreement.schema");
 const { handleError } = require("../utils/errorHandler");
+const { uploadImg } = require("../config/configMulterImages");
 
 /**
  * Obtiene todos los convenios
@@ -77,21 +78,31 @@ async function getAgreementsByRegionAndCommune(req, res) {
 
 async function createAgreement(req, res) {
     try {
-        const { body } = req;
+        const { body, file } = req; // Obtiene los datos del convenio y la imagen
+
         const { error: bodyError } = agreementBodySchema.validate(body);
         if (bodyError) return respondError(req, res, 400, bodyError.message);
+
+        // Verifica que se haya subido una imagen
+        if (!file) {
+            // Si no se proporciona una imagen, se utiliza la imagen default
+            body.image = 'default.jpg';
+        }else {
+            // Si se proporciona una imagen, utiliza el nombre del archivo subido
+            body.image = file.filename;
+        }
 
         const [newAgreement, agreementError] = await AgreementService.createAgreement(body);
 
         if (agreementError) return respondError(req, res, 400, agreementError);
         if (!newAgreement) {
-            return respondError(req, res, 400, "No se creo el convenio");
+            return respondError(req, res, 400, "No se creó el convenio");
         }
 
         respondSuccess(req, res, 201, newAgreement);
     } catch (error) {
         handleError(error, "agreement.controller -> createAgreement");
-        respondError(req, res, 500, "No se creo el convenio");
+        respondError(req, res, 500, "No se creó el convenio");
     }
 }
 

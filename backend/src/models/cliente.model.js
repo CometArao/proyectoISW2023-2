@@ -1,4 +1,5 @@
 "use strict";
+const moment = require("moment");
 const mongoose = require("mongoose");
 
 // creación de esquema de la colección clientes
@@ -7,20 +8,21 @@ const clienteShema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  Apellido_Paterno: {
+  ApellidoPaterno: {
     type: String,
     required: true,
   },
-  Apellido_Materno : {
+  ApellidoMaterno: {
     type: String,
     required: true,
   },
   Rut: {
     type: String,
+    unique: true,
     required: true,
   },
-  Fecha_de_nacimiento: {
-    type: String,
+  FechaDeNacimiento: {
+    type: Date,
     required: true,
   },
   Correo: {
@@ -32,13 +34,11 @@ const clienteShema = new mongoose.Schema({
     required: true,
   },
   Comuna: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Commune",
+    type: String,
     required: true,
   },
   Region: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Region",
+    type: String,
     required: true,
   },
   Discapacidad: {
@@ -46,7 +46,7 @@ const clienteShema = new mongoose.Schema({
     default: false,
     required: true,
   },
-  Adulto_Mayor: {
+  AdultoMayor: {
     type: Boolean,
     default: false,
     required: true,
@@ -54,10 +54,19 @@ const clienteShema = new mongoose.Schema({
    Embarazada: {
     type: Boolean,
     default: false,
-    required: true,  
-   },   
+    required: true,
+   },
 
 });
+
+  clienteShema.set("toJSON", {
+    virtuals: true,
+    versionKey: false,
+    transform: function (doc, ret) {
+        delete ret._id;
+        ret.FechaDeNacimiento = moment(ret.FechaDeNacimiento).format("DD/MM/YYYY");
+    }
+  });
 // Modelo de dstos 'cliente'
 const cliente = mongoose.model("cliente", clienteShema);
 // Ecportación del modelo de datos 'cliente'

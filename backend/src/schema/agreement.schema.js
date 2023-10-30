@@ -53,9 +53,8 @@ const agreementBodySchema = Joi.object({
         "any.required": "La descripción es obligatoria.",
         "string.base": "La descripción debe ser de tipo string.",
     }),
-    image: Joi.string().required().messages({
+    image: Joi.string().messages({
         "string.empty": "La imagen no puede estar vacía.",
-        "any.required": "La imagen es obligatoria.",
         "string.base": "La imagen debe ser de tipo string.",
     }),
     benefit: Joi.string().required().messages({
