@@ -15,8 +15,8 @@ router.get("/", solicitudController.getSolicitudes);
 router.post("/", solicitudController.createSolicitud);
 // Rutas para administrador
 router.use(verifyJWT);
+router.get("/documentos/:id", isAdmin, solicitudController.getDocumentos);
 router.get("/:id", isAdmin, solicitudController.getSolicitudById);
-// router.get("/:id", isAdmin, solicitudController.getDocumentos);
 router.put("/:id", isAdmin, solicitudController.updateEstado);
 router.delete("/:id", isAdmin, solicitudController.deleteSolicitud);
 

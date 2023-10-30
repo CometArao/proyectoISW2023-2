@@ -5,7 +5,7 @@ const moment = require("moment");
 const solicitudSchema = new mongoose.Schema({
     Cliente: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "cliente",
+        ref: "Cliente",
         required: true,
     },
     Fecha: {

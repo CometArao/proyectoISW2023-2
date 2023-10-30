@@ -74,17 +74,34 @@ respondSuccess(req, res, 200, solicitud);
 }
 
 // Se crea una función para que el administrador pueda ver los documentos de un cliente de x solicitud
+/**
+ * Obtiene una solicitud por su id
+ * @param {Object} req - Objeto de petición
+ * @param {Object} res - Objeto de respuesta
+ */ 
 async function getDocumentos(req, res) {
     try {
         const { params } = req;
-        const [solicitud, errorSolicitud] = await SolicitudService.getSolicitudById(params.id);
-        if (errorSolicitud) return respondError(req, res, 404, errorSolicitud);
-        respondSuccess(req, res, 200, solicitud);
+        const solicitud = await SolicitudService.getSolicitudById(params.id).populate("Cliente");
+
+        if (!solicitud) {
+            return res.status(404).json({ message: "Solicitud no encontrada" });
+        }
+
+        const documentos = {
+            DocumentoCarnet: solicitud.Cliente.DocumentoCarnet,
+            DocumentoDiscapacidad: solicitud.Cliente.DocumentoDiscapacidad,
+            DocumentoAdultoMayor: solicitud.Cliente.DocumentoAdultoMayor,
+            DocumentoEmbarazada: solicitud.Cliente.DocumentoEmbarazada,
+        };
+
+        respondSuccess(200).json(documentos);
     } catch (error) {
-        handleError(error, "solicitud.controller -> getSolicitudById");
-        respondError(req, res, 500, "No se obtuvo la solicitud");
+        handleError(error, "solicitud.controller -> getDocumentos");
+        res.status(500).json({ message: 'No se pudieron obtener los documentos' });
     }
 }
+
 
 
 /**
@@ -122,6 +139,7 @@ async function getDocumentos(req, res) {
  }
 
 module.exports = {
+getDocumentos,
 createSolicitud,
 getSolicitudes,
 getSolicitudById,
