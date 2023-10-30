@@ -32,5 +32,6 @@ router.delete(
   usuarioController.deleteUser,
 );
 
+
 // Exporta el enrutador
 module.exports = router;

@@ -14,7 +14,7 @@ const agreementSchema = new mongoose.Schema(
         },
         image: {
             type: String,
-            required: true,
+            default: './data/images/default.jpg',
         },
         benefit: {
             type: String,
