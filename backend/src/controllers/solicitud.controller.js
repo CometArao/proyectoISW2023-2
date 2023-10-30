@@ -10,11 +10,18 @@ const { handleError } = require("../utils/errorHandler");
 async function getSolicitudes(req, res) {
     try {
         const [solicitudes, errorSolicitudes] = await SolicitudService.getSolicitudes();
+
+        let estado = "Aceptado";
+        let motivoRechazo = null;
+
+        if (!body){
+            estado = "Rechazado";
+        }
         if (errorSolicitudes) return respondError(req, res, 404, errorSolicitudes);
 
         solicitudes.length === 0
             ? respondSuccess(req, res, 204)
-            : respondSuccess(req, res, 200, solicitudes);     
+            : respondSuccess(req, res, 200, solicitudes);
     } catch (error) {
         handleError(error, "solicitud.controller -> getSolicitudes");
         respondError(req, res, 400, error.message);
@@ -28,6 +35,7 @@ async function getSolicitudes(req, res) {
  async function createSolicitud(req, res) {
     try {
         const { body } = req;
+
         const [newSolicitud, solicitudError] = await SolicitudService.createSolicitud(body);
         if (solicitudError) return respondError(req, res, 400, solicitudError);
         if (!newSolicitud) {
@@ -36,7 +44,7 @@ async function getSolicitudes(req, res) {
         respondSuccess(req, res, 201, newSolicitud);
     } catch (error) {
         handleError(error, "solicitud.controller -> createSolicitud");
-        respondError(req, res, 500, "No se creo la solicitud");
+        respondError(req, res, 500, "No se creó la solicitud");
     }
  }
 /**
@@ -62,9 +70,21 @@ respondSuccess(req, res, 200, solicitud);
  **/
  async function updateEstado(req, res) {
   try {
-     const { params, body } = req;
+        const { params, body } = req;
+
+        // Si no se ingresa 
+        if (body.Estado === "Rechazado" && !body.MotivoRechazo) {
+            return respondError(req, res, 400, "No se ingresó el motivo de rechazo");
+        }
+
+        if (body.Estado !== "Rechazado") {
+            body.MotivoRechazo = null;
+        }
+
         const [solicitud, solicitudError] = 
         await SolicitudService.updateEstadoById(params.id, body);
+
+        
         if (solicitudError) return respondError(req, res, 400, solicitudError);
         respondSuccess(req, res, 200, solicitud);
     } catch (error) {

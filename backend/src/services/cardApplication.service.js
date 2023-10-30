@@ -65,11 +65,16 @@ async function updateEstadoById(id, solicitud) {
     const solicitudEncontrada = await Solicitud.findById({ _id: id });
     if (!solicitudEncontrada) return [null, "La solicitud no existe"];
 
-    const { Estado } = solicitud;
+    if (solicitudEncontrada.Estado !== "Derivada") {
+      return [null, "Solo se pueden cambiar solicitudes con estado 'Derivada'"];
+    }
+
+    const { Estado, MotivoRechazo } = solicitud;
     const solicitudActual = await Solicitud.findByIdAndUpdate(
       id,
       {
         Estado,
+        MotivoRechazo,
       },
       { new: true },
     );

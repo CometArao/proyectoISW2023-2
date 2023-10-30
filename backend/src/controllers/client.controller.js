@@ -11,6 +11,11 @@ const { handleError } = require("../utils/errorHandler");
 async function createCliente(req, res) {
   try {
     const { body } = req;
+
+    // Convertir la fecha de nacimiento de formato DD/MM/YYYY a objeto Date
+    const parts = body.FechaDeNacimiento.split("/");
+    const convertedDate = new Date(parts[2], parts[1] - 1, parts[0]);
+    body.FechaDeNacimiento = convertedDate;
     const [newCliente, clienteError] =
       await clienteService.createClientes(body);
     if (clienteError) return respondError(req, res, 400, clienteError);

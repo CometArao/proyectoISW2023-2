@@ -9,15 +9,19 @@ const solicitudSchema = new mongoose.Schema({
   },
 
   Fecha: {
-    type: String,
+    type: Date,
     required: true,
   },
   Estado: {
     type: String,
     enum: ["Aceptado", "Rechazado", "Pendiente", "Derivado"],
     default: "Pendiente",
-    required: true,
+    required: false,
+  },
+  // Se agrega el motivoRechazo para argumentarle la razón por la que fue rechazada su solicitud.
+  MotivoRechazo: {
+    type: String,
+    required: false,
   },
 });
-solicitudSchema.set("strictPopulate", false);
 module.exports = mongoose.model("Solicitud", solicitudSchema);
