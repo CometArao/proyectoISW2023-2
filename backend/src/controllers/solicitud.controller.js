@@ -10,13 +10,6 @@ const { handleError } = require("../utils/errorHandler");
 async function getSolicitudes(req, res) {
     try {
         const [solicitudes, errorSolicitudes] = await SolicitudService.getSolicitudes();
-
-        let estado = "Aceptado";
-        let motivoRechazo = null;
-
-        if (!body){
-            estado = "Rechazado";
-        }
         if (errorSolicitudes) return respondError(req, res, 404, errorSolicitudes);
 
         solicitudes.length === 0

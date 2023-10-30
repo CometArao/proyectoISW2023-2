@@ -1,7 +1,7 @@
 "use strict";
 // const axios = require("axios");
 // const { API_KEY } = require("../config/configEnv.js");
-const { validationResult, check } = require("express-validator");
+// const { validationResult, check } = require("express-validator");
 const { respondSuccess, respondError } = require("../utils/resHandler.js");
 const clienteService = require("../services/client.service.js");
 const { handleError } = require("../utils/errorHandler.js");
@@ -14,13 +14,8 @@ const { handleError } = require("../utils/errorHandler.js");
 async function createCliente(req, res) {
   try {
     const { body } = req;
-    // Validaciones 
-  
- // Validación para Correo
-    check(req.Correo, "Formato de correo electrónico no válido").isEmail();
- 
+
     // Validación de dirección con Google Maps Geocoding API.
-        // Si la dirección es válida, puedes continuar con la creación del cliente.
    // const direccionValida = await verificarDireccionEnGoogleMaps(body.Dirección);
 
 // Si la dirección no es válida, puedes agregar un error a las validaciones.
@@ -28,31 +23,35 @@ async function createCliente(req, res) {
    // if (!direccionValida) {
     //  return respondError(req, res, 400, "La dirección proporcionada no es válida.");
    // }
-    
-    // Validación para campos obligatorios.
-const errors = validationResult(req);
+    /*
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
       return respondError(req, res, 400, errors.array());
-    }
-    if (
- 
-      !body.Nombres ||
-      !body.ApellidoPaterno ||
-     !body.ApellidoMaterno ||
-      !body.Rut ||
-      !body.Correo
-       // Agregar más campos requeridos según tu modelo.
-    ) {
-      return respondError(req, res, 400, "Todos los campos son obligatorios");
-    }
+    } */
+    
      // Validación para formato de documentos en PDF.
     // Debes verificar que los documentos sean PDF por separado. 
     // Puedes utilizar la extensión del archivo para hacer esta validación.
 
       // Validación para una sola solicitud a la vez.
     // Aquí debes implementar lógica adicional para verificar si el usuario ya tiene una solicitud activa.
-
+    // Si hay archivos, actualizar los campos correspondientes con la ruta del archivo
+    if (req.files && req.files.length > 0) {
+      for (const file of req.files) {
+        switch (file.fieldname) {
+          case "DocumentoDiscapacidad":
+            body.DocumentoDiscapacidad = "uploads/" + file.filename;
+            break;
+          case "DocumentoAdultoMayor":
+            body.DocumentoAdultoMayor = "uploads/" + file.filename;
+            break;
+          case "DocumentoEmbarazada":
+            body.DocumentoEmbarazada = "uploads/" + file.filename;
+            break;
+        }
+      }
+    }
 
 
     // Convertir la fecha de nacimiento de formato DD/MM/YYYY a objeto Date
@@ -108,7 +107,7 @@ const errors = validationResult(req);
 async function getClientesById(req, res) {
   try {
     const { params } = req;
-    const [cliente, errorCliente] = await clienteService.getClientesById(params.Rut);
+    const [cliente, errorCliente] = await clienteService.getClientesById(params.id);
     if (errorCliente) return respondError(req, res, 404, errorCliente);
     respondSuccess(req, res, 200, cliente);
   } catch (error) {
@@ -151,14 +150,14 @@ async function getClientes(req, res) {
     }
  }
  /**
-  * Elimina un cliente por su rut
+  * Elimina un cliente por su id
   * @param {Object} req - Objeto de petición
   * @param {Object} res - Objeto de respuesta
   */ 
   async function deleteClientesById(req, res) {
     try {
       const { params } = req;
-      const [cliente, clienteError] = await clienteService.deleteClientesById(params.Rut);
+      const [cliente, clienteError] = await clienteService.deleteClientesById(params.id);
       if (clienteError) return respondError(req, res, 404, clienteError);
       respondSuccess(req, res, 200, cliente);
     } catch (error) {
