@@ -187,6 +187,25 @@ async function updateAgreement(req, res) {
     }
 }
 
+// async function updateAgreement(req, res) {
+//     try {
+//         const { params, body } = req;
+//         const { error: paramsError } = agreementIdSchema.validate(params);
+//         if (paramsError) return respondError(req, res, 400, paramsError.message);
+
+//         const { error: bodyError } = agreementBodySchema.validate(body);
+//         if (bodyError) return respondError(req, res, 400, bodyError.message);
+
+//         const [agreement, errorAgreement] = await AgreementService.updateAgreementById(params.id, body);
+//         if (errorAgreement) return respondError(req, res, 404, errorAgreement);
+
+//         respondSuccess(req, res, 200, agreement);
+//     } catch (error) {
+//         handleError(error, "agreement.controller -> updateAgreement");
+//         respondError(req, res, 400, error.message);
+//     }
+// }
+
 /**
  * Elimina un convenio por su id
  * @param {Object} req - Objeto de petición
