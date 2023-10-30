@@ -2,7 +2,10 @@
 
 const { respondSuccess, respondError } = require("../utils/resHandler");
 const AgreementService = require("../services/agreement.service");
-const { agreementBodySchema, agreementIdSchema } = require("../schema/agreement.schema");
+const {
+  agreementBodySchema,
+  agreementIdSchema,
+} = require("../schema/agreement.schema");
 const { handleError } = require("../utils/errorHandler");
 const { uploadImg } = require("../config/configMulterImages");
 const Agreement = require("../models/agreement.model");
@@ -13,19 +16,19 @@ const fs = require("fs");
  * @param {Object} req - Objeto de petición
  * @param {Object} res - Objeto de respuesta
  */
-
 async function getAgreements(req, res) {
-    try {
-        const [agreements, errorAgreements] = await AgreementService.getAgreements();
-        if (errorAgreements) return respondError(req, res, 404, errorAgreements);
+  try {
+    const [agreements, errorAgreements] =
+      await AgreementService.getAgreements();
+    if (errorAgreements) return respondError(req, res, 404, errorAgreements);
 
-        agreements.length === 0 ?
-            respondSuccess(req, res, 204) :
-            respondSuccess(req, res, 200, agreements);
-    } catch (error) {
-        handleError(error, "agreement.controller -> getAgreements");
-        respondError(req, res, 400, error.message);
-    }
+    agreements.length === 0
+      ? respondSuccess(req, res, 204)
+      : respondSuccess(req, res, 200, agreements);
+  } catch (error) {
+    handleError(error, "agreement.controller -> getAgreements");
+    respondError(req, res, 400, error.message);
+  }
 }
 
 /**
@@ -33,21 +36,21 @@ async function getAgreements(req, res) {
  * @param {Object} req - Objeto de petición
  * @param {Object} res - Objeto de respuesta
  */
-
 async function getAgreementsByRegion(req, res) {
-    try {
-        const { params } = req;
-        // const { error: paramsError } = agreementIdSchema.validate(params);
-        // if (paramsError) return respondError(req, res, 400, paramsError.message);
+  try {
+    const { params } = req;
+    // const { error: paramsError } = agreementIdSchema.validate(params);
+    // if (paramsError) return respondError(req, res, 400, paramsError.message);
 
-        const [agreements, errorAgreements] = await AgreementService.getAgreementsByRegion(params.region);
-        if (errorAgreements) return respondError(req, res, 404, errorAgreements);
+    const [agreements, errorAgreements] =
+      await AgreementService.getAgreementsByRegion(params.region);
+    if (errorAgreements) return respondError(req, res, 404, errorAgreements);
 
-        respondSuccess(req, res, 200, agreements);
-    } catch (error) {
-        handleError(error, "agreement.controller -> getAgreementsByRegion");
-        respondError(req, res, 400, error.message);
-    }
+    respondSuccess(req, res, 200, agreements);
+  } catch (error) {
+    handleError(error, "agreement.controller -> getAgreementsByRegion");
+    respondError(req, res, 400, error.message);
+  }
 }
 
 /**
@@ -55,21 +58,27 @@ async function getAgreementsByRegion(req, res) {
  * @param {Object} req - Objeto de petición
  * @param {Object} res - Objeto de respuesta
  */
-
 async function getAgreementsByRegionAndCommune(req, res) {
-    try {
-        const { params } = req;
-        //const { error: paramsError } = agreementIdSchema.validate(params);
-        //if (paramsError) return respondError(req, res, 400, paramsError.message);
+  try {
+    const { params } = req;
+    //const { error: paramsError } = agreementIdSchema.validate(params);
+    //if (paramsError) return respondError(req, res, 400, paramsError.message);
 
-        const [agreements, errorAgreements] = await AgreementService.getAgreementsByRegionAndCommune(params.region, params.commune);
-        if (errorAgreements) return respondError(req, res, 404, errorAgreements);
+    const [agreements, errorAgreements] =
+      await AgreementService.getAgreementsByRegionAndCommune(
+        params.region,
+        params.commune,
+      );
+    if (errorAgreements) return respondError(req, res, 404, errorAgreements);
 
-        respondSuccess(req, res, 200, agreements);
-    } catch (error) {
-        handleError(error, "agreement.controller -> getAgreementsByRegionAndCommune");
-        respondError(req, res, 400, error.message);
-    }
+    respondSuccess(req, res, 200, agreements);
+  } catch (error) {
+    handleError(
+      error,
+      "agreement.controller -> getAgreementsByRegionAndCommune",
+    );
+    respondError(req, res, 400, error.message);
+  }
 }
 
 /**
@@ -77,7 +86,6 @@ async function getAgreementsByRegionAndCommune(req, res) {
  * @param {Object} req - Objeto de petición
  * @param {Object} res - Objeto de respuesta
  */
-
 async function createAgreement(req, res) {
     try {
         const { body, file } = req; // Obtiene los datos del convenio y la imagen
@@ -106,6 +114,12 @@ async function createAgreement(req, res) {
         handleError(error, "agreement.controller -> createAgreement");
         respondError(req, res, 500, "No se creó el convenio");
     }
+
+    respondSuccess(req, res, 201, newAgreement);
+  } catch (error) {
+    handleError(error, "agreement.controller -> createAgreement");
+    respondError(req, res, 500, "No se creo el convenio");
+  }
 }
 
 /**
@@ -113,21 +127,22 @@ async function createAgreement(req, res) {
  * @param {Object} req - Objeto de petición
  * @param {Object} res - Objeto de respuesta
  */
-
 async function getAgreementById(req, res) {
-    try {
-        const { params } = req;
-        const { error: paramsError } = agreementIdSchema.validate(params);
-        if (paramsError) return respondError(req, res, 400, paramsError.message);
+  try {
+    const { params } = req;
+    const { error: paramsError } = agreementIdSchema.validate(params);
+    if (paramsError) return respondError(req, res, 400, paramsError.message);
 
-        const [agreement, errorAgreement] = await AgreementService.getAgreementById(params.id);
-        if (errorAgreement) return respondError(req, res, 404, errorAgreement);
+    const [agreement, errorAgreement] = await AgreementService.getAgreementById(
+      params.id,
+    );
+    if (errorAgreement) return respondError(req, res, 404, errorAgreement);
 
-        respondSuccess(req, res, 200, agreement);
-    } catch (error) {
-        handleError(error, "agreement.controller -> getAgreementById");
-        respondError(req, res, 400, error.message);
-    }
+    respondSuccess(req, res, 200, agreement);
+  } catch (error) {
+    handleError(error, "agreement.controller -> getAgreementById");
+    respondError(req, res, 400, error.message);
+  }
 }
 
 /**
@@ -135,7 +150,6 @@ async function getAgreementById(req, res) {
  * @param {Object} req - Objeto de petición
  * @param {Object} res - Objeto de respuesta
  */
-
 async function updateAgreement(req, res) {
     try {
         const { params, body, file } = req;
@@ -203,29 +217,29 @@ async function updateAgreement(req, res) {
  * @param {Object} req - Objeto de petición
  * @param {Object} res - Objeto de respuesta
  */
-
 async function deleteAgreement(req, res) {
-    try {
-        const { params } = req;
-        const { error: paramsError } = agreementIdSchema.validate(params);
-        if (paramsError) return respondError(req, res, 400, paramsError.message);
+  try {
+    const { params } = req;
+    const { error: paramsError } = agreementIdSchema.validate(params);
+    if (paramsError) return respondError(req, res, 400, paramsError.message);
 
-        const [agreement, errorAgreement] = await AgreementService.deleteAgreementById(params.id);
-        if (errorAgreement) return respondError(req, res, 404, errorAgreement);
+    const [agreement, errorAgreement] =
+      await AgreementService.deleteAgreementById(params.id);
+    if (errorAgreement) return respondError(req, res, 404, errorAgreement);
 
-        respondSuccess(req, res, 200, agreement);
-    } catch (error) {
-        handleError(error, "agreement.controller -> deleteAgreement");
-        respondError(req, res, 400, error.message);
-    }
+    respondSuccess(req, res, 200, agreement);
+  } catch (error) {
+    handleError(error, "agreement.controller -> deleteAgreement");
+    respondError(req, res, 400, error.message);
+  }
 }
 
 module.exports = {
-    getAgreements,
-    createAgreement,
-    getAgreementById,
-    updateAgreement,
-    deleteAgreement,
-    getAgreementsByRegion,
-    getAgreementsByRegionAndCommune,
+  getAgreements,
+  createAgreement,
+  getAgreementById,
+  updateAgreement,
+  deleteAgreement,
+  getAgreementsByRegion,
+  getAgreementsByRegionAndCommune,
 };
