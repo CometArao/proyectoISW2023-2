@@ -114,12 +114,6 @@ async function createAgreement(req, res) {
         handleError(error, "agreement.controller -> createAgreement");
         respondError(req, res, 500, "No se creó el convenio");
     }
-
-    respondSuccess(req, res, 201, newAgreement);
-  } catch (error) {
-    handleError(error, "agreement.controller -> createAgreement");
-    respondError(req, res, 500, "No se creo el convenio");
-  }
 }
 
 /**
