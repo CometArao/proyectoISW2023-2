@@ -13,9 +13,9 @@ const validateRut = require("../middlewares/rutValidation.middleware.js");
 /** Instancia del encrutador */
 const router = express.Router();
 
-// Accesible solo por administradores
 router.post("/", ageValidation, validateRut, clienteController.createCliente);
-router.post("/", isAdmin, clienteController.createCliente);
+
+// Accesible solo por administradores
 router.use(verifyJWT);
 router.get("/", isAdmin, clienteController.getClientes);
 router.get("/:id", isAdmin, clienteController.getClientesById);

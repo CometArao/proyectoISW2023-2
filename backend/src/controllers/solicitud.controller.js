@@ -2,6 +2,9 @@
 const { respondSuccess, respondError } = require("../utils/resHandler");
 const SolicitudService = require("../services/cardApplication.service.js");
 const { handleError } = require("../utils/errorHandler");
+const TarjetaVecino = require("../models/tarjetaVecino.model.js");
+const Solicitud = require("../models/solicitud.model.js");
+
 /**
  * Obtidene todas las solicitudes
  * @param {Object} req - Objeto de petición
@@ -10,15 +13,6 @@ const { handleError } = require("../utils/errorHandler");
 async function getSolicitudes(req, res) {
     try {
         const [solicitudes, errorSolicitudes] = await SolicitudService.getSolicitudes();
-
-        let estado = "Aceptado";
-        let motivoRechazo = null;
-
-        if (!body){
-            estado = "Rechazado";
-        }
-        if (errorSolicitudes) return respondError(req, res, 404, errorSolicitudes);
-
         solicitudes.length === 0
             ? respondSuccess(req, res, 204)
             : respondSuccess(req, res, 200, solicitudes);
@@ -36,17 +30,36 @@ async function getSolicitudes(req, res) {
     try {
         const { body } = req;
 
-        const [newSolicitud, solicitudError] = await SolicitudService.createSolicitud(body);
-        if (solicitudError) return respondError(req, res, 400, solicitudError);
-        if (!newSolicitud) {
-            return respondError(req, res, 400, "No se creo la solicitud");
+        // Comprobar si el cliente ya tiene una tarjeta vecino
+
+        const tarjetaExistente = await TarjetaVecino.findOne({ Cliente: body.Cliente });
+        if (tarjetaExistente) {
+            return respondError(req, res, 400, "El cliente ya tiene una solicitud pendiente.");
         }
+
+        // Comprobar si el cliente ya tiene una solicitud pendiente o derivada.
+        const solicitudEncontrada = await Solicitud.findOne({ Cliente: body.Cliente });
+        if (solicitudEncontrada) {
+            return respondError(req, res, 400, "El cliente ya tiene una solicitud pendiente.");
+        }
+
+        const [newSolicitud, solicitudError] = await SolicitudService.createSolicitud(body);
+
+        if (solicitudError) {
+            return respondError(req, res, 400, solicitudError);
+        }
+
+        if (!newSolicitud) {
+            return respondError(req, res, 400, "No se creo la solicitud XD");
+        }
+        
         respondSuccess(req, res, 201, newSolicitud);
     } catch (error) {
         handleError(error, "solicitud.controller -> createSolicitud");
-        respondError(req, res, 500, "No se creó la solicitud");
+        respondError(req, res, 500, "No se creó la solicitud XD");
     }
  }
+
 /**
  * Obtiene una solicitud por su id
  * @param {Object} req - Objeto de petición
@@ -81,10 +94,9 @@ respondSuccess(req, res, 200, solicitud);
             body.MotivoRechazo = null;
         }
 
-        const [solicitud, solicitudError] = 
+        const [solicitud, solicitudError] =
         await SolicitudService.updateEstadoById(params.id, body);
 
-        
         if (solicitudError) return respondError(req, res, 400, solicitudError);
         respondSuccess(req, res, 200, solicitud);
     } catch (error) {

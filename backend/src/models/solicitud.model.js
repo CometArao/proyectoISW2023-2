@@ -7,7 +7,6 @@ const solicitudSchema = new mongoose.Schema({
         ref: "cliente",
         required: true,
     },
-
     Fecha: {
         type: Date,
         required: true,
@@ -24,4 +23,5 @@ const solicitudSchema = new mongoose.Schema({
         required: false,
     },
     });
+
 module.exports = mongoose.model("Solicitud", solicitudSchema);
