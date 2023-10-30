@@ -11,7 +11,8 @@ const { handleError } = require("../utils/errorHandler");
 async function createCliente(req, res) {
   try {
     const { body } = req;
-    const [newCliente, clienteError] = await clienteService.createClientes(body);
+    const [newCliente, clienteError] =
+      await clienteService.createClientes(body);
     if (clienteError) return respondError(req, res, 400, clienteError);
     if (!newCliente) {
       return respondError(req, res, 400, "No se creo el cliente");
@@ -30,7 +31,9 @@ async function createCliente(req, res) {
 async function getClientesById(req, res) {
   try {
     const { params } = req;
-    const [cliente, errorCliente] = await clienteService.getClientesById(params.Rut);
+    const [cliente, errorCliente] = await clienteService.getClientesById(
+      params.id,
+    );
     if (errorCliente) return respondError(req, res, 404, errorCliente);
     respondSuccess(req, res, 200, cliente);
   } catch (error) {
@@ -57,43 +60,47 @@ async function getClientes(req, res) {
   }
 }
 /**
- * Actualiza un cliente por su id 
+ * Actualiza un cliente por su id
  * @param {Object} req - Objeto de petición
  * @param {Object} res - Objeto de respuesta
  */
- async function updateClientesById(req, res) {
-    try {
-      const { params, body } = req;
-      const [cliente, clienteError] = await clienteService.updateClientesById(params.Rut, body);
-      if (clienteError) return respondError(req, res, 404, clienteError);
-      respondSuccess(req, res, 200, cliente);
-    } catch (error) {
-      handleError(error, "cliente.controller -> updateCliente");
-      respondError(req, res, 500, "No se actualizo el cliente");
-    }
- }
- /**
-  * Elimina un cliente por su rut
-  * @param {Object} req - Objeto de petición
-  * @param {Object} res - Objeto de respuesta
-  */ 
-  async function deleteClientesById(req, res) {
-    try {
-      const { params } = req;
-      const [cliente, clienteError] = await clienteService.deleteClientesById(params.Rut);
-      if (clienteError) return respondError(req, res, 404, clienteError);
-      respondSuccess(req, res, 200, cliente);
-    } catch (error) {
-      handleError(error, "cliente.controller -> deleteCliente");
-      respondError(req, res, 500, "No se elimino el cliente");
-    }
+async function updateClientesById(req, res) {
+  try {
+    const { params, body } = req;
+    const [cliente, clienteError] = await clienteService.updateClientesById(
+      params.Rut,
+      body,
+    );
+    if (clienteError) return respondError(req, res, 404, clienteError);
+    respondSuccess(req, res, 200, cliente);
+  } catch (error) {
+    handleError(error, "cliente.controller -> updateCliente");
+    respondError(req, res, 500, "No se actualizo el cliente");
   }
+}
+/**
+ * Elimina un cliente por su rut
+ * @param {Object} req - Objeto de petición
+ * @param {Object} res - Objeto de respuesta
+ */
+async function deleteClientesById(req, res) {
+  try {
+    const { params } = req;
+    const [cliente, clienteError] = await clienteService.deleteClientesById(
+      params.Rut,
+    );
+    if (clienteError) return respondError(req, res, 404, clienteError);
+    respondSuccess(req, res, 200, cliente);
+  } catch (error) {
+    handleError(error, "cliente.controller -> deleteCliente");
+    respondError(req, res, 500, "No se elimino el cliente");
+  }
+}
 
 module.exports = {
-    createCliente,
-    getClientes,
-    getClientesById,
-    updateClientesById,
-    deleteClientesById,
+  createCliente,
+  getClientes,
+  getClientesById,
+  updateClientesById,
+  deleteClientesById,
 };
-

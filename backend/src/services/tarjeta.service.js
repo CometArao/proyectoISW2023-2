@@ -4,21 +4,6 @@ const Tarjeta = require("../models/tarjeta.model");
 const { handleError } = require("../utils/errorHandler");
 
 /**
- * Filtra y prioriza las solicitudes según las restricciones (adultos mayores, embarazadas, discapacitados).
- * @param {Array} solicitudes - Las solicitudes a priorizar.
- * @returns {Array} Las solicitudes priorizadas.
- */
-function priorizarSolicitudes(solicitudes) {
-  const solicitudesPriorizadas = solicitudes.filter((solicitud) => {
-    const restricciones = solicitud.restricciones;
-    return restricciones === "Adulto mayor" || restricciones === "Embarazada" 
-    || restricciones === "Discapacidad";
-  });
-  return solicitudesPriorizadas;
-}
-
-
-/**
  * Crea una nueva tarjeta.
  * @param {Object} nuevaTarjeta - La nueva tarjeta a crear.
  * @returns {Promise<Object>} La nueva tarjeta creada.
@@ -72,8 +57,11 @@ async function obtenerTarjetaPorId(id) {
  */
 async function actualizarTarjeta(id, tarjetaActualizada) {
   try {
-    const tarjetaActualizada = await Tarjeta.findByIdAndUpdate(id, 
-      tarjetaActualizada, { new: true });
+    const tarjetaActualizada = await Tarjeta.findByIdAndUpdate(
+      id,
+      tarjetaActualizada,
+      { new: true },
+    );
     return tarjetaActualizada;
   } catch (error) {
     handleError(error, "tarjeta.service -> actualizarTarjeta");

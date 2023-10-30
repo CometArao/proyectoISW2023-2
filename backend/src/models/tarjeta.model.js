@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const tarjetaSchema = new mongoose.Schema({
   usuario: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User", // Esto hace referencia al modelo de usuarios si estás utilizando MongoDB
+    ref: "cliente",
     required: true,
   },
   nombre: {
