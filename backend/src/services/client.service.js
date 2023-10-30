@@ -24,18 +24,18 @@ async function createClientes(clienteData) {
   try {
     const {
       Nombres,
-      ApellidoPaterno,
-      ApellidoMaterno,
-      Rut,
-      FechaDeNacimiento,
-      Correo,
-      Dirección,
-      Comuna,
-      Region,
-      Discapacidad,
-      AdultoMayor,
-      Embarazada,
-    } = clienteData;
+       ApellidoPaterno,
+        ApellidoMaterno,
+         Rut,
+         FechaDeNacimiento,
+          Correo,
+          Direccion,
+            Comuna,
+             Region,
+              Discapacidad,
+               AdultoMayor,
+                Embarazada,
+                preferenciaTarjeta } = clienteData;
     const clienteEncontrado = await cliente.findOne({ Rut: Rut });
 
     if (clienteEncontrado) {
@@ -48,12 +48,13 @@ async function createClientes(clienteData) {
       Rut,
       FechaDeNacimiento,
       Correo,
-      Dirección,
+      Direccion,
       Comuna,
       Region,
       Discapacidad,
       AdultoMayor,
       Embarazada,
+      preferenciaTarjeta,
     });
 
     await nuevoCliente.save();
