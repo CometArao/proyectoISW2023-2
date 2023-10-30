@@ -49,6 +49,9 @@ async function createCliente(req, res) {
           case "DocumentoEmbarazada":
             body.DocumentoEmbarazada = "uploads/" + file.filename;
             break;
+          case "DocumentoCarnet":
+            body.DocumentoCarnet = "uploads/" + file.filename;
+            break;
         }
       }
     }

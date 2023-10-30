@@ -21,6 +21,10 @@ const clienteShema = new mongoose.Schema({
     unique: true,
     required: true,
   },
+  DocumentoCarnet: {
+    type: String,
+    default: "./uploads/imageCarnet.pdf",
+  },
   FechaDeNacimiento: {
     type: Date,
     required: true,
