@@ -3,6 +3,12 @@
 const Joi = require("joi");
 const { Commune, Region } = require("../models/location.model");
 
+/**
+ * Custom validation function for communes.
+ * @param {string} value - The value to validate.
+ * @param {object} helpers - The validation helpers object.
+ * @returns {string|Error} - The validated value or an error.
+ */
 const customValidateCommunes = async (value, helpers) => {
     try {
         // Obtiene el objeto de la región asociada al convenio
@@ -24,6 +30,12 @@ const customValidateCommunes = async (value, helpers) => {
     }
 };
 
+/**
+ * Custom validation function for regions.
+ * @param {string} value - The value to validate.
+ * @param {object} helpers - The validation helpers object.
+ * @returns {string|Error} - The validated value or an error.
+ */
 const customValidateRegions = async (value, helpers) => {
     try {
         // Intenta encontrar una región con el _id proporcionado
@@ -61,10 +73,11 @@ const agreementBodySchema = Joi.object({
         "string.empty": "La imagen no puede estar vacía.",
         "string.base": "La imagen debe ser de tipo string.",
     }),
-    benefit: Joi.string().required().messages({
+    benefit: Joi.string().required().max(200).messages({
         "string.empty": "El beneficio no puede estar vacío.",
         "any.required": "El beneficio es obligatorio.",
         "string.base": "El beneficio debe ser de tipo string.",
+        "string.max": "El beneficio debe tener un máximo de {#limit} caracteres.",
     }),
     region: Joi.string().required().custom(customValidateRegions).messages({
         "string.empty": "La región no puede estar vacía.",
@@ -104,4 +117,4 @@ const agreementIdSchema = Joi.object({
     "object.unknown": "No se permiten propiedades adicionales.",
 });
 
-module.exports = {  agreementBodySchema, agreementIdSchema };
+module.exports = { agreementBodySchema, agreementIdSchema };
