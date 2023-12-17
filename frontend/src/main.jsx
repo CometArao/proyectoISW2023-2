@@ -5,6 +5,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Root from './routes/Root.jsx';
 import ErrorPage from './routes/ErrorPage.jsx';
 import Login from './routes/Login.jsx';
+import ListAgreements from './components/ListAgreements.jsx';
 
 const router = createBrowserRouter([
   {
@@ -16,11 +17,15 @@ const router = createBrowserRouter([
         path: '/',
         element: <App />,
       },
+      {
+        path: '/auth',
+        element: <Login />,
+      },
+      {
+        path: '/convenios',
+        element: <ListAgreements />,
+      },
     ],
-  },
-  {
-    path: '/auth',
-    element: <Login />,
   },
 ]);
 
