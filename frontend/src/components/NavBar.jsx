@@ -6,7 +6,9 @@ const NavBar = () => {
     <nav>
         <ul>
             <li>
-                <button onClick={() => navigate('/')}>Home</button>
+                <button
+                style={ {marginRight: '5px'}} 
+                onClick={() => navigate('/')}>Home</button>
             </li>
             <li>
                 <button onClick={() => navigate('/auth')}>Login</button>

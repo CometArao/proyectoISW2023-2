@@ -1,4 +1,4 @@
-import axios from "./root.service"
+import axios from './root.service';
 
 export const createAgreement = async (data) => {
     try {
