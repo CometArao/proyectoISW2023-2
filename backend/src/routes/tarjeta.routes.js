@@ -4,10 +4,6 @@ const tarjetaController = require("../controllers/tarjeta.controller");
 const authenticationMiddleware = require("../middlewares/authentication.middleware");
 const authorizationMiddleware = require("../middlewares/authorization.middleware");
 
-const validarTarjeta = require("../middlewares/validationMiddleware");
-
-
-
 // Ruta para que el administrador genere un listado de Tarjetas Vecino con prioridad
 router.get(
   "/generar-listado-prioridad",
@@ -28,9 +24,6 @@ router.post(
 router.post(
   "/tarjetas",
   authenticationMiddleware,
-
-  validarTarjeta,
-
   tarjetaController.crearTarjeta,
 );
 router.get(
