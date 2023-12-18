@@ -1,3 +1,5 @@
+const path = require("path");
+
 // Importa el archivo 'configEnv.js' para cargar las variables de entorno
 const { PORT, HOST } = require("./config/configEnv.js");
 // Importa el módulo 'cors' para agregar los cors
@@ -32,11 +34,19 @@ async function setupServer() {
     // Agrega el middleware para el manejo de datos en formato JSON
     server.use(express.json());
     // Agregamos los cors
-    server.use(cors({ origin: "/" }));
+    // CONFIGURAR ESTE ARCHIVO AL MOMENTO DE SUBIR AL SERVIDOR
+    // server.use(cors());
+    server.use(cors({ origin: true, credentials: true }));
+    // server.use(cors({ origin: "http://localhost:5173" }));
+    // server.use(cors({ origin: "/" }));
     // Agregamos el middleware para el manejo de cookies
     server.use(cookieParser());
     // Agregamos morgan para ver las peticiones que se hacen al servidor
     server.use(morgan("dev"));
+
+    // Configuración de rutas estáticas para las imágenes
+    server.use("/images", express.static(path.join(__dirname, "./src/data/images")));
+    
     // Agrega el middleware para el manejo de datos en formato URL
     server.use(express.urlencoded({ extended: true }));
     // Agrega el enrutador principal al servidor

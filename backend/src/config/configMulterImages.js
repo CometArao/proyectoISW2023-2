@@ -1,19 +1,37 @@
-const multer = require('multer');
+const multer = require("multer");
 
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, './src/data/images');
+    /**
+     * Sets the destination folder for the uploaded files.
+     * @param {Object} req - The request object.
+     * @param {Object} file - The uploaded file object.
+     * @param {Function} cb - The callback function.
+     */
+    destination: function(req, file, cb) {
+        cb(null, "./src/data/images");
     },
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + '-' + file.originalname);
-    }
+    /**
+     * Sets the filename for the uploaded files.
+     * @param {Object} req - The request object.
+     * @param {Object} file - The uploaded file object.
+     * @param {Function} cb - The callback function.
+     */
+    filename: function(req, file, cb) {
+        cb(null, Date.now() + "-convenio");
+    },
 });
 
-const fileFilter = function (req, file, cb) {
-    if (file.mimetype.startsWith('image/')) {
+/**
+ * Filters the uploaded files based on their mimetype.
+ * @param {Object} req - The request object.
+ * @param {Object} file - The uploaded file object.
+ * @param {Function} cb - The callback function.
+ */
+const fileFilter = function(req, file, cb) {
+    if (file.mimetype.startsWith("image/")) {
         cb(null, true);
     } else {
-        cb(new Error('Solo se permite la subida de imagenes'), false);
+        cb(new Error("Solo se permite la subida de imagenes"), false);
     }
 };
 
