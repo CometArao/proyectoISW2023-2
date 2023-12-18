@@ -42,7 +42,6 @@ async function getCommunes() {
 
 async function getRegionById(id) {
     try {
-        console.log("id", id);
         const region = await Region.findById(id);
         if (!region) return [null, "No existe la región"];
 

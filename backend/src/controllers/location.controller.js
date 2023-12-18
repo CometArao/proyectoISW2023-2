@@ -58,9 +58,9 @@ async function getLocationById(req, res) {
         let location;
         let error;
         if (params.id) {
-            [location, error] = await LocationService.getRegionById(params.id);
+            [location, error] = await LocationService.getCommuneById(params.id);
             if (!location) {
-                [location, error] = await LocationService.getCommuneById(params.id);
+                [location, error] = await LocationService.getRegionById(params.id);
             }
         }
 
