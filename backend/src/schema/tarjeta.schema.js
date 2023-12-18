@@ -1,7 +1,6 @@
 const Joi = require("joi");
 
 const tarjetaSchema = Joi.object({
-  usuario: Joi.objectId(),
   nombre: Joi.string().required(),
   comuna: Joi.string().required(),
   rut: Joi.string().pattern(/^[0-9]{1,2}\.[0-9]{3}\.[0-9]{3}-[0-9kK]$/).required(),

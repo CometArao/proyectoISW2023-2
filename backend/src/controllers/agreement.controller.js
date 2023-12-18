@@ -58,8 +58,8 @@ async function getAgreementsByRegion(req, res) {
 async function getAgreementsByRegionAndCommune(req, res) {
   try {
     const { params } = req;
-    //const { error: paramsError } = agreementIdSchema.validate(params);
-    //if (paramsError) return respondError(req, res, 400, paramsError.message);
+    // const { error: paramsError } = agreementIdSchema.validate(params);
+    // if (paramsError) return respondError(req, res, 400, paramsError.message);
 
     const [agreements, errorAgreements] =
       await AgreementService.getAgreementsByRegionAndCommune(

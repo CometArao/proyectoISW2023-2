@@ -62,10 +62,11 @@ const clienteShema = new mongoose.Schema({
   clienteShema.set("toJSON", {
     virtuals: true,
     versionKey: false,
+    // eslint-disable-next-line require-jsdoc
     transform: function (doc, ret) {
         delete ret._id;
         ret.FechaDeNacimiento = moment(ret.FechaDeNacimiento).format("DD/MM/YYYY");
-    }
+    },
   });
 // Modelo de dstos 'cliente'
 const cliente = mongoose.model("cliente", clienteShema);
