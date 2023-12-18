@@ -26,7 +26,7 @@ function PageRoot() {
     <div>
       <NavBar />
       <div>
-        <h1>Aqui deberia ir un header</h1>
+        <h1>Tarjeta Vecino</h1>
         <p>Estas logeado como: {user.email}</p>
         <button onClick={handleLogout}>Cerrar sesion</button>
         <hr />

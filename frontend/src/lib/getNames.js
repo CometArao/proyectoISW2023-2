@@ -8,6 +8,7 @@ export async function getRegionName(regionId) {
   
   // Función para obtener el nombre de una comuna por su ID
   export async function getCommuneName(communeId) {
+
     const response = await fetch(`http://localhost:1611/api/ubicaciones/${communeId}`);
     const data = await response.json();
     return data.data.name;
