@@ -1,20 +1,39 @@
 import { useForm } from "react-hook-form"
 import { createAgreement } from "../services/agreement.service"
+import { useNavigate } from "react-router-dom"
+import { getRegionIdName, getCommuneIdName } from "../lib/getNames";
+import { useState, useEffect } from "react";
 
-export default function AgreementForm() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm()
+const AgreementForm = () => {
+  const navigate = useNavigate();
+  const { register, handleSubmit, errors, setValue } = useForm();
+  const [regions, setRegions] = useState([]);
+  const [communes, setCommunes] = useState([]);
 
+  useEffect(() => {
+    // Obtener y configurar las regiones
+    const fetchRegions = async () => {
+      const response = await fetch('http://localhost:5000/api/ubicaciones/regiones');
+      const data = await response.json();
+      setRegions(data);
+    };
 
-  const onSubmit = (data) => console.log(data)
+    fetchRegions();
+  }, []);
 
-  const mostrarPorConsola = async (data) => {
-    const res = await createAgreement(data);
-    console.log(res);
-  }
+  const onSubmit = async (data) => {
+    // Mapear IDs a nombres antes de enviar al servidor
+    data.region = (await getRegionIdName(data.region)).name;
+    data.commune = (await getCommuneIdName(data.commune)).name;
+    createAgreement(data).then(() => {
+      navigate('/');
+      console.log("Convenio creado");
+    });
+
+    // Enviar los datos al servidor
+    console.log(data);
+    // ...
+  };
 
   return (
     /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
@@ -35,10 +54,17 @@ export default function AgreementForm() {
             <label htmlFor="benefit">Beneficio </label>
             <input autoComplete="off" {...register("benefit", { required: true })} />
         </div>
-        <div>
-            <label htmlFor="region">Región </label>
-            <input autoComplete="off" {...register("region", { required: true })} />
-        </div>
+        <div className="mb-3">
+        <label htmlFor="region" className="form-label">Región</label>
+        <select className="form-control" id="region" name="region" ref={register({ required: 'Este campo es obligatorio' })}>
+          {regions.map((region) => (
+            <option key={region.id} value={region.id}>
+              {region.name}
+            </option>
+          ))}
+        </select>
+        {errors.region && <p>{errors.region.message}</p>}
+      </div>
         <div>
             <label htmlFor="commune">Comuna </label>
             <input autoComplete="off" {...register("commune", { required: true })} />
@@ -61,3 +87,5 @@ export default function AgreementForm() {
     </form>
   )
 }
+
+export default AgreementForm
