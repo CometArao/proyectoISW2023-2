@@ -12,9 +12,10 @@ const router = express.Router();
 
 // Define las rutas para  solicitudes que solo ven los usuarios
 router.get("/", solicitudController.getSolicitudes);
-router.post("/", solicitudFechaValidation, solicitudController.createSolicitud);
+router.post("/", solicitudController.createSolicitud);
 // Rutas para administrador
 router.use(verifyJWT);
+router.get("/documentos/:id", isAdmin, solicitudController.getDocumentos);
 router.get("/:id", isAdmin, solicitudController.getSolicitudById);
 router.put("/:id", isAdmin, solicitudController.updateEstado);
 router.delete("/:id", isAdmin, solicitudController.deleteSolicitud);

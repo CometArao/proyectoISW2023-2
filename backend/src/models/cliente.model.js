@@ -21,6 +21,10 @@ const clienteShema = new mongoose.Schema({
     unique: true,
     required: true,
   },
+  DocumentoCarnet: {
+    type: String,
+    default: "./uploads/imageCarnet.pdf",
+  },
   FechaDeNacimiento: {
     type: Date,
     required: true,
@@ -29,41 +33,60 @@ const clienteShema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  Dirección: {
+  Direccion: {
     type: String,
     required: true,
   },
   Comuna: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Commune",
     required: true,
   },
   Region: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Region",
     required: true,
   },
   Discapacidad: {
     type: Boolean,
-    default: false,
     required: true,
+  },
+  DocumentoDiscapacidad: {
+    type: String,
+    default: "./uploads/imageDispacacidad.pdf",
   },
   AdultoMayor: {
     type: Boolean,
-    default: false,
     required: true,
+  },
+  DocumentoAdultoMayor: {
+    type: String,
+    default: "./uploads/imageAdultoMayor.pdf",
   },
    Embarazada: {
     type: Boolean,
-    default: false,
     required: true,
    },
-
+   DocumentoEmbarazada: {
+    type: String,
+    default: "./uploads/imageEmbarazada.pdf",
+  },
+   preferenciaTarjeta: {
+    type: String,
+    enum: ["Física", "Digital"],
+    required: true,
+   },
 });
 
   clienteShema.set("toJSON", {
     virtuals: true,
     versionKey: false,
+
     // eslint-disable-next-line require-jsdoc
     transform: function (doc, ret) {
+
+    transform: function(doc, ret) {
+
         delete ret._id;
         ret.FechaDeNacimiento = moment(ret.FechaDeNacimiento).format("DD/MM/YYYY");
     },

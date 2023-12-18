@@ -3,6 +3,12 @@
 const Joi = require("joi");
 const { Commune, Region } = require("../models/location.model");
 
+/**
+ * Custom validation function for communes.
+ * @param {string} value - The value to validate.
+ * @param {object} helpers - The validation helpers object.
+ * @returns {string|Error} - The validated value or an error.
+ */
 const customValidateCommunes = async (value, helpers) => {
     try {
         // Obtiene el objeto de la región asociada al convenio
@@ -24,6 +30,12 @@ const customValidateCommunes = async (value, helpers) => {
     }
 };
 
+/**
+ * Custom validation function for regions.
+ * @param {string} value - The value to validate.
+ * @param {object} helpers - The validation helpers object.
+ * @returns {string|Error} - The validated value or an error.
+ */
 const customValidateRegions = async (value, helpers) => {
     try {
         // Intenta encontrar una región con el _id proporcionado
@@ -43,25 +55,29 @@ const customValidateRegions = async (value, helpers) => {
  * @constant {Object}
  */
 const agreementBodySchema = Joi.object({
-    name: Joi.string().required().messages({
+    name: Joi.string().min(2).max(100).required().messages({
         "string.empty": "El nombre no puede estar vacío.",
         "any.required": "El nombre es obligatorio.",
         "string.base": "El nombre debe ser de tipo string.",
+        "string.min": "El nombre debe tener al menos {#limit} caracteres.",
+        "string.max": "El nombre debe tener un máximo de {#limit} caracteres.",
     }),
-    description: Joi.string().required().messages({
+    description: Joi.string().min(10).max(500).required().messages({
         "string.empty": "La descripción no puede estar vacía.",
         "any.required": "La descripción es obligatoria.",
         "string.base": "La descripción debe ser de tipo string.",
+        "string.min": "La descripción debe tener al menos {#limit} caracteres.",
+        "string.max": "La descripción debe tener un máximo de {#limit} caracteres.",
     }),
-    image: Joi.string().required().messages({
+    image: Joi.string().messages({
         "string.empty": "La imagen no puede estar vacía.",
-        "any.required": "La imagen es obligatoria.",
         "string.base": "La imagen debe ser de tipo string.",
     }),
-    benefit: Joi.string().required().messages({
+    benefit: Joi.string().required().max(200).messages({
         "string.empty": "El beneficio no puede estar vacío.",
         "any.required": "El beneficio es obligatorio.",
         "string.base": "El beneficio debe ser de tipo string.",
+        "string.max": "El beneficio debe tener un máximo de {#limit} caracteres.",
     }),
     region: Joi.string().required().custom(customValidateRegions).messages({
         "string.empty": "La región no puede estar vacía.",
@@ -101,4 +117,4 @@ const agreementIdSchema = Joi.object({
     "object.unknown": "No se permiten propiedades adicionales.",
 });
 
-module.exports = {  agreementBodySchema, agreementIdSchema };
+module.exports = { agreementBodySchema, agreementIdSchema };

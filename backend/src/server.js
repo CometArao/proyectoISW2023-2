@@ -4,6 +4,8 @@ const { PORT, HOST } = require("./config/configEnv.js");
 const cors = require("cors");
 // Importa el módulo 'express' para crear la aplicacion web
 const express = require("express");
+// Importa el módulo 'multer' para subir archivos
+const multer = require("multer");
 // Importamos morgan para ver las peticiones que se hacen al servidor
 const morgan = require("morgan");
 // Importa el módulo 'cookie-parser' para manejar las cookies
@@ -44,6 +46,16 @@ async function setupServer() {
     // Agrega el enrutador de autenticación al servidor
     server.use("/api/", authRoutes);
 
+    // Agrega el middleware para el manejo de errores de multer
+    server.use((err, req, res, next) => {
+      if (err instanceof multer.MulterError) {
+        res.status(400).send({ message: "Error al subir el archivo." });
+      } else if (err) {
+        res.status(500).send({ message: err.message });
+      }
+    });
+
+    
     // Inicia el servidor en el puerto especificado
     server.listen(PORT, () => {
       // eslint-disable-next-line no-console

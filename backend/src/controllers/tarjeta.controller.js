@@ -5,11 +5,29 @@ const Cliente = require("../models/cliente.model"); // Importa el modelo de Clie
 const Solicitud = require("../models/solicitud.model");
 const { respondSuccess, respondError } = require("../utils/resHandler");
 const { handleError } = require("../utils/errorHandler");
+
 // eslint-disable-next-line no-unused-vars
 const nodemailer = require("nodemailer");
 const tarjetaSchema = require("../schema/tarjeta.schema"); 
 const { enviarNotificacionDeEmision } = require("../utils/notificationService");
 require("pdf-lib");
+
+const nodemailer = require("nodemailer");
+
+// Configura el transporte para el envío de correos.
+// No need to declare nodemailer again, as it has already been declared above.
+
+// Configura el transporte para el envío de correos.
+
+const transporter = nodemailer.createTransport({
+  host: "sandbox.smtp.mailtrap.io",
+  port: 2525,
+  auth: {
+    user: "84a0a79610b71a",
+    pass: "68945da02c9dd6",
+  },
+});
+
 
 // Generar un listado priorizado de solicitudes de Tarjetas Vecino
 /**
@@ -45,6 +63,7 @@ async function generarListadoPrioridad(req, res) {
  */
 async function notificarUsuariosTarjetasEmitidas(req, res) {
   try {
+
     const solicitudes = await Solicitud.find({ Estado: "Aceptado" }).populate("Cliente");
 
     for (const solicitud of solicitudes) {
@@ -59,6 +78,32 @@ async function notificarUsuariosTarjetasEmitidas(req, res) {
     respondSuccess(req, res, 200, "Notificaciones enviadas con éxito.");
   } catch (error) {
     // Manejo del error
+
+    const solicitudes = await Solicitud.find({ Estado: "Aceptado" }).populate(
+      "Cliente",
+    );
+    for (const solicitud of solicitudes) {
+      const mailOptions = {
+        from: "admin@email.com",
+        to: solicitud.Cliente?.Correo ?? "correo@mail.cl", // Correo del cliente.
+        subject: "¡Tu Tarjeta Vecino ha sido emitida!",
+        text: "Tu Tarjeta Vecino ha sido emitida con éxito.",
+      };
+      // Envía el correo electrónico.
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          respondError(req, res, 500, error.message);
+        }
+      });
+    }
+
+    return respondSuccess(req, res, 200, "Correos enviados satisfactoriamente");
+  } catch (error) {
+    handleError(
+      error,
+      "tarjeta.controller -> notificarUsuariosTarjetasEmitidas",
+    );
+
     respondError(req, res, 500, error.message);
   }
 }
@@ -72,6 +117,7 @@ async function notificarUsuariosTarjetasEmitidas(req, res) {
  */
 async function crearTarjeta(req, res) {
   try {
+
     // Valida los datos de entrada con Joi antes de crear la tarjeta
     await tarjetaSchema.validateAsync(req.body);
 
@@ -83,6 +129,12 @@ async function crearTarjeta(req, res) {
     return respondSuccess(req, res, 201, nuevaTarjeta);
   } catch (error) {
     // Asegúrate de manejar los errores de validación de Joi y otros errores
+
+    const tarjeta = new Tarjeta(req.body);
+    const nuevaTarjeta = await tarjeta.save();
+    return respondSuccess(req, res, 201, nuevaTarjeta);
+  } catch (error) {
+
     handleError(error, "tarjeta.controller -> crearTarjeta");
     return respondError(req, res, 500, error.message);
   }
@@ -124,7 +176,6 @@ async function obtenerTarjetaPorId(req, res) {
     return respondError(req, res, 500, error.message);
   }
 }
-
 
 // Actualizar una tarjeta por su ID
 /**
