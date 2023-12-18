@@ -6,25 +6,8 @@ import { useState, useEffect } from "react";
 
 const AgreementForm = () => {
   const navigate = useNavigate();
-  const { register, handleSubmit, errors, setValue } = useForm();
-  const [regions, setRegions] = useState([]);
-  const [communes, setCommunes] = useState([]);
-
-  useEffect(() => {
-    // Obtener y configurar las regiones
-    const fetchRegions = async () => {
-      const response = await fetch('http://localhost:5000/api/ubicaciones/regiones');
-      const data = await response.json();
-      setRegions(data);
-    };
-
-    fetchRegions();
-  }, []);
 
   const onSubmit = async (data) => {
-    // Mapear IDs a nombres antes de enviar al servidor
-    data.region = (await getRegionIdName(data.region)).name;
-    data.commune = (await getCommuneIdName(data.commune)).name;
     createAgreement(data).then(() => {
       navigate('/');
       console.log("Convenio creado");
@@ -36,7 +19,6 @@ const AgreementForm = () => {
   };
 
   return (
-    /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
     <form onSubmit={handleSubmit(onSubmit)}>
         <div>
             <label htmlFor="name">Nombre </label>
@@ -54,17 +36,26 @@ const AgreementForm = () => {
             <label htmlFor="benefit">Beneficio </label>
             <input autoComplete="off" {...register("benefit", { required: true })} />
         </div>
-        <div className="mb-3">
-        <label htmlFor="region" className="form-label">Región</label>
-        <select className="form-control" id="region" name="region" ref={register({ required: 'Este campo es obligatorio' })}>
-          {regions.map((region) => (
-            <option key={region.id} value={region.id}>
-              {region.name}
-            </option>
-          ))}
-        </select>
-        {errors.region && <p>{errors.region.message}</p>}
-      </div>
+        <div>
+            <label htmlFor="region">Región</label>
+            <select {...register("region", { required: true })}></select>
+                <option value="1">Arica y Parinacota</option>
+                <option value="2">Tarapacá</option>
+                <option value="3">Antofagasta</option>
+                <option value="4">Atacama</option>
+                <option value="5">Coquimbo</option>
+                <option value="6">Valparaíso</option>
+                <option value="7">Metropolitana</option>
+                <option value="8">O’Higgins</option>
+                <option value="9">Maule</option>
+                <option value="10">Ñuble</option>
+                <option value="11">Biobío</option>
+                <option value="12">Araucanía</option>
+                <option value="13">Los Ríos</option>
+                <option value="14">Los Lagos</option>
+                <option value="15">Aysén</option>
+                <option value="16">Magallanes</option>
+        </div>
         <div>
             <label htmlFor="commune">Comuna </label>
             <input autoComplete="off" {...register("commune", { required: true })} />
