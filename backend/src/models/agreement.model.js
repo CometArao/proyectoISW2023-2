@@ -22,33 +22,33 @@ const agreementSchema = new mongoose.Schema(
         },
         region: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Region',
+            ref: "Region",
             required: true,
         },
         commune: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Commune',
+            ref: "Commune",
             required: true,
         },
         exclusiveSeniors: {
             type: Boolean,
-            default: false
+            default: false,
         },
         exclusivePregnant: {
             type: Boolean,
-            default: false
+            default: false,
         },
         exclusiveDisability: {
             type: Boolean,
-            default: false
-        }
+            default: false,
+        },
     },
     {
         timestamps: true,   
-        versionKey: false
-    }
+        versionKey: false,
+    },
 );
 
-const Agreement = mongoose.model('Agreement', agreementSchema);
+const Agreement = mongoose.model("Agreement", agreementSchema);
 
 module.exports = Agreement;

@@ -62,9 +62,14 @@ async function createCliente(req, res) {
     const convertedDate = new Date(parts[2], parts[1] - 1, parts[0]);
     body.FechaDeNacimiento = convertedDate;
 
+    const [newCliente, clienteError] =
+      await clienteService.createClientes(body);
+
+
 
   // Resto del código para la creación del cliente.
    const [newCliente, clienteError] = await clienteService.createClientes(body);
+
 
     if (clienteError) return respondError(req, res, 400, clienteError);
       if (!newCliente) {
@@ -146,6 +151,37 @@ async function getClientes(req, res) {
  * @param {Object} res - Objeto de respuesta
  */
 
+async function updateClientesById(req, res) {
+  try {
+    const { params, body } = req;
+    const [cliente, clienteError] = await clienteService.updateClientesById(
+      params.Rut,
+      body,
+    );
+    if (clienteError) return respondError(req, res, 404, clienteError);
+    respondSuccess(req, res, 200, cliente);
+  } catch (error) {
+    handleError(error, "cliente.controller -> updateCliente");
+    respondError(req, res, 500, "No se actualizo el cliente");
+  }
+}
+/**
+ * Elimina un cliente por su rut
+ * @param {Object} req - Objeto de petición
+ * @param {Object} res - Objeto de respuesta
+ */
+async function deleteClientesById(req, res) {
+  try {
+    const { params } = req;
+    const [cliente, clienteError] = await clienteService.deleteClientesById(
+      params.Rut,
+    );
+    if (clienteError) return respondError(req, res, 404, clienteError);
+    respondSuccess(req, res, 200, cliente);
+  } catch (error) {
+    handleError(error, "cliente.controller -> deleteCliente");
+    respondError(req, res, 500, "No se elimino el cliente");
+
  async function updateClientesById(req, res) {
     try {
       const { params, body } = req;
@@ -172,7 +208,9 @@ async function getClientes(req, res) {
       handleError(error, "cliente.controller -> deleteCliente");
       respondError(req, res, 500, "No se elimino el cliente");
     }
+
   }
+}
 
 module.exports = {
   createCliente,
