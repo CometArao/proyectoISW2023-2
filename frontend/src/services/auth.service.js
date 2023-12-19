@@ -4,7 +4,11 @@ import jwtDecode from 'jwt-decode';
 
 export const login = async ({ email, password }) => {
   try {
+
+    const response = await axios.post('auth/login', {
+
     const response = await axios.post('login', {
+
       email,
       password,
     });
