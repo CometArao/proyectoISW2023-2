@@ -61,8 +61,10 @@ async function getAgreementsByRegion(req, res) {
 async function getAgreementsByRegionAndCommune(req, res) {
   try {
     const { params } = req;
+
     //const { error: paramsError } = agreementIdSchema.validate(params);
     //if (paramsError) return respondError(req, res, 400, paramsError.message);
+
 
     const [agreements, errorAgreements] =
       await AgreementService.getAgreementsByRegionAndCommune(
@@ -113,7 +115,14 @@ async function createAgreement(req, res) {
     } catch (error) {
         handleError(error, "agreement.controller -> createAgreement");
         respondError(req, res, 500, "No se creó el convenio");
+
     }
+
+    respondSuccess(req, res, 201, newAgreement);
+  } catch (error) {
+    handleError(error, "agreement.controller -> createAgreement");
+    respondError(req, res, 500, "No se creo el convenio");
+  }
 }
 
 /**
@@ -145,6 +154,8 @@ async function getAgreementById(req, res) {
  * @param {Object} res - Objeto de respuesta
  */
 async function updateAgreement(req, res) {
+
+
     try {
         const { params, body, file } = req;
         const { error: paramsError } = agreementIdSchema.validate(params);
@@ -185,6 +196,7 @@ async function updateAgreement(req, res) {
         handleError(error, "agreement.controller -> updateAgreement");
         respondError(req, res, 400, error.message);
     }
+
 }
 
 // async function updateAgreement(req, res) {

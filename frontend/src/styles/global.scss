@@ -1,0 +1,25 @@
+// global.scss
+
+@import "../node_modules/bootstrap/scss/functions";
+@import "../node_modules/bootstrap/scss/variables";
+@import "../node_modules/bootstrap/scss/mixins";
+// Create your own map
+$custom-colors: (
+  "palette1": #e3f2fd,
+  "palette2": #5C5470,
+  "palette3": #B9B4C7,
+  "palette4": #FAF0E6,
+);
+
+// Merge the maps
+$theme-colors: map-merge($theme-colors, $custom-colors);
+
+$position-values: (
+  0: 0,
+  // 50: 40%,
+  50: 50%,
+  100: 100%
+);
+
+@import "../../node_modules/bootstrap/scss/bootstrap.scss";
+
