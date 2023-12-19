@@ -12,37 +12,32 @@ mongoose.connect('mongodb+srv://franciscobarraza2001:go1ALvPVgcM0Uw5k@tarjetavec
     .catch(err => console.error('Error al conectarse a MongoDB', err));
 
 // Funcion para importar datos a la base de datos
-/**
- * Imports data into the database.
- */
 async function importData() {
-  for (const regionData of data.regiones) {
-    // Crea una nueva region
-    const region = new Region({ name: regionData.region});
-    
-    // Guarda la region en la base de datos
-    await region.save();
+    for(const regionData of data.regiones){
+        // Crea una nueva region
+        const region = new Region({ name: regionData.region});
+        
+        // Guarda la region en la base de datos
+        await region.save();
 
-    for(const communeName of regionData.comunas) {
-      // Crea una nueva comuna
-      const commune = new Commune({ 
-        name: communeName, 
-        region: region._id 
-      });
+        for(const communeName of regionData.comunas){
+            // Crea una nueva comuna
+            const commune = new Commune({ 
+                name: communeName, 
+                region: region._id 
+            });
 
-      // Guarda la comuna en la base de datos
-      await commune.save();
-      console.log(`Comuna ${commune.name} importada con éxito`);
+            // Guarda la comuna en la base de datos
+            await commune.save();
+            console.log(`Comuna ${commune.name} importada con éxito`);
+        }
+        console.log(`Región ${region.name} importada con éxito`);
     }
-    console.log(`Región ${region.name} importada con éxito`);
-  }
-  console.log('Datos importados con éxito');
+    console.log('Datos importados con éxito');
 }
 
 // Conexion a la base de datos
-mongoose.connect(
-  'mongodb+srv://franciscobarraza2001:go1ALvPVgcM0Uw5k@tarjetavecino.p0dqavf.mongodb.net/?retryWrites=true&w=majority&appName=AtlasApp', 
-  { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect('mongodb+srv://franciscobarraza2001:go1ALvPVgcM0Uw5k@tarjetavecino.p0dqavf.mongodb.net/?retryWrites=true&w=majority&appName=AtlasApp', { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     console.log('Conexión a MongoDB exitosa.');
     importData()

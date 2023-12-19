@@ -3,7 +3,6 @@ const mongoose = require("mongoose");
 const moment = require("moment");
 
 const solicitudSchema = new mongoose.Schema({
-
     Cliente: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Cliente",
@@ -34,6 +33,5 @@ const solicitudSchema = new mongoose.Schema({
             ret.Fecha = moment(ret.Fecha).format("DD/MM/YYYY");
         }
       });
-
 
 module.exports = mongoose.model("Solicitud", solicitudSchema);

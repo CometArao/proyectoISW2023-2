@@ -36,10 +36,8 @@ router.use("/tarjetavecino", TarjetaVecinoRoutes);
 router.use("/solicitudes", solicitudRoutes);
 // Define las rutas para los clientes /api/clientes
 router.use("/clientes", clienteRoutes);
-
 // Define las rutas para las ubicaciones /api/ubicaciones
 router.use("/ubicaciones", locationRoutes);
-
 
 // Exporta el enrutador
 module.exports = router;
