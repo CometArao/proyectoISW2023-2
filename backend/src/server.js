@@ -1,9 +1,13 @@
+const path = require("path");
+
 // Importa el archivo 'configEnv.js' para cargar las variables de entorno
 const { PORT, HOST } = require("./config/configEnv.js");
 // Importa el módulo 'cors' para agregar los cors
 const cors = require("cors");
 // Importa el módulo 'express' para crear la aplicacion web
 const express = require("express");
+// Importa el módulo 'multer' para subir archivos
+const multer = require("multer");
 // Importamos morgan para ver las peticiones que se hacen al servidor
 const morgan = require("morgan");
 // Importa el módulo 'cookie-parser' para manejar las cookies
@@ -30,11 +34,23 @@ async function setupServer() {
     // Agrega el middleware para el manejo de datos en formato JSON
     server.use(express.json());
     // Agregamos los cors
+
     server.use(cors({ origin: "*" }));
+
+    // CONFIGURAR ESTE ARCHIVO AL MOMENTO DE SUBIR AL SERVIDOR
+    // server.use(cors());
+    server.use(cors({ origin: true, credentials: true }));
+    // server.use(cors({ origin: "http://localhost:5173" }));
+    // server.use(cors({ origin: "/" }));
+
     // Agregamos el middleware para el manejo de cookies
     server.use(cookieParser());
     // Agregamos morgan para ver las peticiones que se hacen al servidor
     server.use(morgan("dev"));
+
+    // Configuración de rutas estáticas para las imágenes
+    server.use("/images", express.static(path.join(__dirname, "./src/data/images")));
+    
     // Agrega el middleware para el manejo de datos en formato URL
     server.use(express.urlencoded({ extended: true }));
     // Agrega el enrutador principal al servidor
@@ -44,6 +60,16 @@ async function setupServer() {
     // Agrega el enrutador de autenticación al servidor
     server.use("/api/", authRoutes);
 
+    // Agrega el middleware para el manejo de errores de multer
+    server.use((err, req, res, next) => {
+      if (err instanceof multer.MulterError) {
+        res.status(400).send({ message: "Error al subir el archivo." });
+      } else if (err) {
+        res.status(500).send({ message: err.message });
+      }
+    });
+
+    
     // Inicia el servidor en el puerto especificado
     server.listen(PORT, () => {
       // eslint-disable-next-line no-console

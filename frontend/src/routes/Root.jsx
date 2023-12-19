@@ -2,8 +2,12 @@ import { Outlet } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../services/auth.service';
 import { AuthProvider, useAuth } from '../context/AuthContext';
+
 // import Image from 'next/image';
 // import escudo from '../assets/Escudo_Universidad_del_Bío-Bío.png';
+
+import NavBar from '../components/NavBar';
+
 
 function Root() {
   return (
@@ -22,6 +26,7 @@ function PageRoot() {
   };
 
   const { user } = useAuth();
+
   return (
     <div>
 
@@ -88,6 +93,20 @@ function PageRoot() {
       <div className="container">
         <Outlet />
       </div>
+
+
+
+  return (
+    <div>
+      <NavBar />
+      <div>
+        <h1>Tarjeta Vecino</h1>
+        <p>Estas logeado como: {user.email}</p>
+        <button onClick={handleLogout}>Cerrar sesion</button>
+        <hr />
+        <br />
+      </div>
+      <Outlet />
 
     </div>
   );

@@ -18,6 +18,10 @@ const solicitudRoutes = require("./solicitud.routes.js");
 
 /** Encrutador de clientes */
 const clienteRoutes = require("./client.routes.js");
+
+/** Encrutador de ubicaciones */
+const locationRoutes = require("./location.routes.js");
+
 /** Instancia del enrutador */
 const router = express.Router();
 
@@ -32,6 +36,10 @@ router.use("/tarjetavecino", TarjetaVecinoRoutes);
 router.use("/solicitudes", solicitudRoutes);
 // Define las rutas para los clientes /api/clientes
 router.use("/clientes", clienteRoutes);
+
+// Define las rutas para las ubicaciones /api/ubicaciones
+router.use("/ubicaciones", locationRoutes);
+
 
 // Exporta el enrutador
 module.exports = router;

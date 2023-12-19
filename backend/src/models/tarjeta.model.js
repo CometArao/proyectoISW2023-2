@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const tarjetaSchema = new mongoose.Schema({
+
   rut: {
     type: String,
     unique: true,
@@ -24,6 +25,7 @@ const tarjetaSchema = new mongoose.Schema({
     enum: ["activa", "bloqueada", "vencida"],
     default: "activa",
   },
+
   comuna: {
     type: String,
     required: true,

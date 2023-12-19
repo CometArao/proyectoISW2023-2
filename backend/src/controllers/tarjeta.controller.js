@@ -5,11 +5,29 @@ const Cliente = require("../models/cliente.model"); // Importa el modelo de Clie
 const Solicitud = require("../models/solicitud.model");
 const { respondSuccess, respondError } = require("../utils/resHandler");
 const { handleError } = require("../utils/errorHandler");
+
 // eslint-disable-next-line no-unused-vars
 const nodemailer = require("nodemailer");
 const tarjetaSchema = require("../schema/tarjeta.schema"); 
 const { enviarNotificacionDeEmision } = require("../utils/notificationService");
 require("pdf-lib");
+
+
+
+// Configura el transporte para el envío de correos.
+// No need to declare nodemailer again, as it has already been declared above.
+
+// Configura el transporte para el envío de correos.
+
+const transporter = nodemailer.createTransport({
+  host: "sandbox.smtp.mailtrap.io",
+  port: 2525,
+  auth: {
+    user: "84a0a79610b71a",
+    pass: "68945da02c9dd6",
+  },
+});
+
 
 // Generar un listado priorizado de solicitudes de Tarjetas Vecino
 /**
@@ -45,24 +63,35 @@ async function generarListadoPrioridad(req, res) {
  */
 async function notificarUsuariosTarjetasEmitidas(req, res) {
   try {
-    const solicitudes = await Solicitud.find({ Estado: "Aceptado" }).populate("Cliente");
 
+    const solicitudes = await Solicitud.find({ Estado: "Aceptado" }).populate(
+      "Cliente",
+    );
     for (const solicitud of solicitudes) {
-      const infoTarjeta = {
-        estado: solicitud.estado, // Asume que esto está definido en tu modelo de Solicitud
-        fechaVencimiento: solicitud.fechaVencimiento, // Asume que esto está definido
+      const mailOptions = {
+        from: "admin@email.com",
+        to: solicitud.Cliente?.Correo ?? "correo@mail.cl", // Correo del cliente.
+        subject: "¡Tu Tarjeta Vecino ha sido emitida!",
+        text: "Tu Tarjeta Vecino ha sido emitida con éxito.",
       };
-      await enviarNotificacionDeEmision(solicitud.Cliente?.Correo, infoTarjeta);
+      // Envía el correo electrónico.
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          respondError(req, res, 500, error.message);
+        }
+      });
     }
-    
-    // Respuesta de éxito
-    respondSuccess(req, res, 200, "Notificaciones enviadas con éxito.");
+
+    return respondSuccess(req, res, 200, "Correos enviados satisfactoriamente");
   } catch (error) {
-    // Manejo del error
+    handleError(
+      error,
+      "tarjeta.controller -> notificarUsuariosTarjetasEmitidas",
+    );
+
     respondError(req, res, 500, error.message);
   }
 }
-
 
 /**
  * Crea una nueva tarjeta.
@@ -72,6 +101,7 @@ async function notificarUsuariosTarjetasEmitidas(req, res) {
  */
 async function crearTarjeta(req, res) {
   try {
+
     // Valida los datos de entrada con Joi antes de crear la tarjeta
     await tarjetaSchema.validateAsync(req.body);
 
@@ -83,6 +113,7 @@ async function crearTarjeta(req, res) {
     return respondSuccess(req, res, 201, nuevaTarjeta);
   } catch (error) {
     // Asegúrate de manejar los errores de validación de Joi y otros errores
+
     handleError(error, "tarjeta.controller -> crearTarjeta");
     return respondError(req, res, 500, error.message);
   }
@@ -172,7 +203,9 @@ async function eliminarTarjeta(req, res) {
 
 module.exports = {
   generarListadoPrioridad,
+
   enviarNotificacionDeEmision,
+
   notificarUsuariosTarjetasEmitidas,
   crearTarjeta,
   obtenerTarjetas,
