@@ -6,6 +6,7 @@ const {
     getRegions,
     getCommunes,
     getLocationById,
+    getCommunesForRegion,
     // getRegionById,
     // getCommuneById,
 } = require("../controllers/location.controller.js");
@@ -19,6 +20,8 @@ router.get("/regiones", getRegions);
 router.get("/comunas", getCommunes);
 
 router.get("/:id", getLocationById);
+
+router.get("/comunas/:id", getCommunesForRegion);
 // // Ruta para obtener el nombre de una región por su ID
 // router.get("/regionID/:regionId", getRegionById);
 
