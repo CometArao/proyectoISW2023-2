@@ -69,10 +69,6 @@ const agreementBodySchema = Joi.object({
         "string.min": "La descripción debe tener al menos {#limit} caracteres.",
         "string.max": "La descripción debe tener un máximo de {#limit} caracteres.",
     }),
-    image: Joi.string().messages({
-        "string.empty": "La imagen no puede estar vacía.",
-        "string.base": "La imagen debe ser de tipo string.",
-    }),
     benefit: Joi.string().required().max(200).messages({
         "string.empty": "El beneficio no puede estar vacío.",
         "any.required": "El beneficio es obligatorio.",

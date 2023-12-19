@@ -29,6 +29,11 @@ async function getRegions() {
  *
  * @returns {Promise<[Array<Commune> | null, string | null]>} The communes or an error message.
  */
+/**
+ * Get all communes.
+ *
+ * @returns {Promise<[Array<Commune> | null, string | null]>} The communes or an error message.
+ */
 async function getCommunes() {
     try {
         const communes = await Commune.find();
@@ -40,6 +45,12 @@ async function getCommunes() {
     }
 }
 
+/**
+ * Get a region by its ID.
+ *
+ * @param {string} id - The ID of the region.
+ * @returns {Promise<[Region | null, string | null]>} The region or an error message.
+ */
 async function getRegionById(id) {
     try {
         const region = await Region.findById(id);
@@ -51,6 +62,12 @@ async function getRegionById(id) {
     }
 }
 
+/**
+ * Get a commune by its ID.
+ *
+ * @param {string} id - The ID of the commune.
+ * @returns {Promise<[Commune | null, string | null]>} The commune or an error message.
+ */
 async function getCommuneById(id) {
     try {
         const commune = await Commune.findById(id);
@@ -62,9 +79,27 @@ async function getCommuneById(id) {
     }
 }
 
+/**
+ * Get all communes for a specific region.
+ *
+ * @param {string} regionId - The ID of the region.
+ * @returns {Promise<[Array<Commune> | null, string | null]>} The communes or an error message.
+ */
+async function getCommunesForRegion(regionId) {
+    try {
+        const communes = await Commune.find({ region: regionId });
+        if (!communes) return [null, "No hay comunas para esta región"];
+
+        return [communes, null];
+    } catch (error) {
+        handleError(error, "location.service -> getCommunesForRegion");
+    }
+}
+
 module.exports = {
     getRegions,
     getCommunes,
     getRegionById,
     getCommuneById,
+    getCommunesForRegion,
 };

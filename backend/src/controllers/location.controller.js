@@ -73,51 +73,35 @@ async function getLocationById(req, res) {
     }
 }
 
-// /**
-//  * Obtiene una región por su ID
-//  * @param {Object} req - Objeto de petición
-//  * @param {Object} res - Objeto de respuesta
-//  */
-// async function getRegionById(req, res) {
-//     try {
-//         const { params } = req;
-//         const { error: paramsError } = locationIdSchema.validate(params);
-//         if (paramsError) return respondError(req, res, 400, paramsError.message);
-//         const [region, errorRegion] = await LocationService.getRegionById(params.id);
-//         if (errorRegion) return respondError(req, res, 404, errorRegion);
+/**
+ * Get communes for a specific region.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Object} The response object.
+ */
+const getCommunesForRegion = async (req, res) => {
+    try {
+        const { params } = req;
+        const { error: paramsError } = locationIdSchema.validate(params);
+        if (paramsError) return respondError(req, res, 400, paramsError.message);
 
-//         respondSuccess(req, res, 200, region);
-//     } catch (error) {
-//         handleError(error, "location.controller -> getRegionById");
-//         respondError(req, res, 400, error.message);
-//     }
-// }
+        const [communes, error] = await LocationService.getCommunesForRegion(
+            params.id,
+        );
+        if (error) return respondError(req, res, 404, error);
 
-// /**
-//  * Obtiene una comuna por su ID
-//  * @param {Object} req - Objeto de petición
-//  * @param {Object} res - Objeto de respuesta
-//  */
-// async function getCommuneById(req, res) {
-//     try {
-//         const { params } = req;
-//         const { error: paramsError } = locationIdSchema.validate(params);
-//         if (paramsError) return respondError(req, res, 400, paramsError.message);
-
-//         const [commune, errorCommune] = await LocationService.getCommuneById(params.id);
-//         if (errorCommune) return respondError(req, res, 404, errorCommune);
-
-//         respondSuccess(req, res, 200, commune);
-//     } catch (error) {
-//         handleError(error, "location.controller -> getCommuneById");
-//         respondError(req, res, 400, error.message);
-//     }
-// }
+        respondSuccess(req, res, 200, communes);
+    } catch (error) {
+        handleError(error, "location.controller -> getCommunesForRegion");
+        respondError(req, res, 400, error.message);
+    }
+}
 
 module.exports = {
     getRegions,
     getCommunes,
     getLocationById,
+    getCommunesForRegion,
     // getRegionById,
     // getCommuneById,
 };
