@@ -9,13 +9,15 @@ import Root from './routes/Root.jsx';
 import ErrorPage from './routes/ErrorPage.jsx';
 import Login from './routes/Login.jsx';
 import Estado from './routes/EstadoTarjeta.jsx';
+import Emitir from './routes/EmitirTarjeta.jsx';
 import Listado from './routes/Solicitudes.jsx';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <Root />,
-    errorElement: <ErrorPage />,
+    // errorElement: <ErrorPage />,
+    errorElement: <Login />,
     children: [
       {
         path: '/',
@@ -24,6 +26,10 @@ const router = createBrowserRouter([
       {
         path: '/estado-tarjeta',
         element: <Estado />,
+      },
+      {
+        path: '/emitir-tarjeta',
+        element: <Emitir />,
       },
       {
         path: '/ver-solicitudes',

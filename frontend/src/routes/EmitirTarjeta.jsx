@@ -1,4 +1,4 @@
-function App() {
+function Emitir() {
   return (
     <>
       <h2>Tarjeta Vecino</h2>
@@ -7,4 +7,4 @@ function App() {
   );
 }
 
-export default App;
+export default Emitir;

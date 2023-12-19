@@ -22,10 +22,10 @@ function PageRoot() {
   };
 
   const { user } = useAuth();
-
   return (
     <div>
 
+      {/* <nav className="navbar navbar-expand-lg navbar-light bg-primary-subtle bg-body-tertiary fixed-top"> */}
       <nav className="navbar navbar-expand-lg navbar-light bg-primary-subtle bg-body-tertiary">
         <div className="container">
           <a className="navbar-brand" href="#">
@@ -41,7 +41,7 @@ function PageRoot() {
           </button>
           <div className="collapse navbar-collapse" id="navbarNavDropdown">
             <ul className="navbar-nav">
-              <li className="nav-item">
+              {/* <li className="nav-item">
                 <a className="nav-link active" aria-current="page" href="/">Home</a>
               </li>
               <li className="nav-item">
@@ -49,7 +49,7 @@ function PageRoot() {
               </li>
               <li className="nav-item">
                 <a className="nav-link" href="#">Pricing</a>
-              </li>
+              </li> */}
               <li className="nav-item dropdown">
                 <a className="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   Tarjeta Vecino
@@ -60,18 +60,23 @@ function PageRoot() {
                   <li><a className="dropdown-item" href="/ver-solicitudes">Solicitudes</a></li>
                 </ul>
               </li>
+
+              <div className="vr"></div>
+
+              <li className="nav-item">
+                <a className="nav-link" href="#">Convenios</a>
+              </li>
               <li className="nav-item dropdown">
                 <a className="nav-link dropdown-toggle" href="#" id="userDrop" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-person-circle" viewBox="0 0 16 16">
                     <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-                    <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+                    <path fillRule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
                   </svg>
                 </a>
-                <ul class="dropdown-menu" aria-labelledby='userDrop'>
-                  <li><h6 class="dropdown-header">{user.email}</h6></li>
-                  {/* <li><h6 class="dropdown-header">{user.roles}</h6></li> */}
-                  <li><a class="dropdown-item" href="#">Action</a></li>
-                  <li><a class="dropdown-item" href='' onClick={handleLogout}>Cerrar sesion</a></li>
+                <ul className="dropdown-menu ms-auto" aria-labelledby='userDrop'>
+                  <li><h6 className="dropdown-header">{user.roles[0].name}: {user.email}</h6></li>
+                  <li><a className="dropdown-item" href="#">Action</a></li>
+                  <li><a className="dropdown-item" href='' onClick={handleLogout}>Cerrar sesion</a></li>
                 </ul>
               </li>
 

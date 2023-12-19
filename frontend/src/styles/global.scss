@@ -16,7 +16,8 @@ $theme-colors: map-merge($theme-colors, $custom-colors);
 
 $position-values: (
   0: 0,
-  50: 40%,
+  // 50: 40%,
+  50: 50%,
   100: 100%
 );
 
