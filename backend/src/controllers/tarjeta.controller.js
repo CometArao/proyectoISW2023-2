@@ -5,7 +5,14 @@ const Cliente = require("../models/cliente.model"); // Importa el modelo de Clie
 const Solicitud = require("../models/solicitud.model");
 const { respondSuccess, respondError } = require("../utils/resHandler");
 const { handleError } = require("../utils/errorHandler");
+
+// eslint-disable-next-line no-unused-vars
 const nodemailer = require("nodemailer");
+const tarjetaSchema = require("../schema/tarjeta.schema"); 
+const { enviarNotificacionDeEmision } = require("../utils/notificationService");
+require("pdf-lib");
+
+
 
 // Configura el transporte para el envío de correos.
 // No need to declare nodemailer again, as it has already been declared above.
@@ -20,6 +27,7 @@ const transporter = nodemailer.createTransport({
     pass: "68945da02c9dd6",
   },
 });
+
 
 // Generar un listado priorizado de solicitudes de Tarjetas Vecino
 /**
@@ -55,6 +63,7 @@ async function generarListadoPrioridad(req, res) {
  */
 async function notificarUsuariosTarjetasEmitidas(req, res) {
   try {
+
     const solicitudes = await Solicitud.find({ Estado: "Aceptado" }).populate(
       "Cliente",
     );
@@ -79,6 +88,7 @@ async function notificarUsuariosTarjetasEmitidas(req, res) {
       error,
       "tarjeta.controller -> notificarUsuariosTarjetasEmitidas",
     );
+
     respondError(req, res, 500, error.message);
   }
 }
@@ -91,14 +101,24 @@ async function notificarUsuariosTarjetasEmitidas(req, res) {
  */
 async function crearTarjeta(req, res) {
   try {
+
+    // Valida los datos de entrada con Joi antes de crear la tarjeta
+    await tarjetaSchema.validateAsync(req.body);
+
     const tarjeta = new Tarjeta(req.body);
     const nuevaTarjeta = await tarjeta.save();
+    const pathPDF = await crearPDFDeTarjeta(nuevaTarjeta);
+    await enviarNotificacionDeEmision(correoDelUsuario, infoDeLaTarjeta, pathPDF);
+
     return respondSuccess(req, res, 201, nuevaTarjeta);
   } catch (error) {
+    // Asegúrate de manejar los errores de validación de Joi y otros errores
+
     handleError(error, "tarjeta.controller -> crearTarjeta");
     return respondError(req, res, 500, error.message);
   }
 }
+
 
 /**
  * Obtiene todas las tarjetas.
@@ -135,6 +155,7 @@ async function obtenerTarjetaPorId(req, res) {
     return respondError(req, res, 500, error.message);
   }
 }
+
 
 // Actualizar una tarjeta por su ID
 /**
@@ -182,6 +203,9 @@ async function eliminarTarjeta(req, res) {
 
 module.exports = {
   generarListadoPrioridad,
+
+  enviarNotificacionDeEmision,
+
   notificarUsuariosTarjetasEmitidas,
   crearTarjeta,
   obtenerTarjetas,

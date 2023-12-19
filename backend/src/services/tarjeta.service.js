@@ -3,6 +3,18 @@
 const Tarjeta = require("../models/tarjeta.model");
 const { handleError } = require("../utils/errorHandler");
 
+
+// src/services/tarjetaService.js
+/**
+ * Obtiene las tarjetas con prioridad.
+ * @returns {Promise<Array>} Un array con las tarjetas ordenadas por prioridad.
+ */
+async function obtenerTarjetasConPrioridad() {
+  return Tarjeta.find().sort({ "fechaEmision": -1, "AdultoMayor": -1, "Embarazada": -1 });
+};
+
+
+
 /**
  * Crea una nueva tarjeta.
  * @param {Object} nuevaTarjeta - La nueva tarjeta a crear.
@@ -91,6 +103,9 @@ async function eliminarTarjeta(id) {
 
 module.exports = {
   priorizarSolicitudes,
+
+obtenerTarjetasConPrioridad,
+
   crearTarjeta,
   obtenerTarjetas,
   obtenerTarjetaPorId,
