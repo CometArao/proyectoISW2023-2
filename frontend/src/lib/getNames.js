@@ -16,7 +16,7 @@ export async function getRegionName(regionId) {
 
 // Función para obtener el nombre de una región por su ID
 export async function getRegionIdName(regionId) {
-  console.log("regionId", regionId)
+  console.log("regionId", regionId);
   const response = await axios.get(`/ubicaciones/${regionId}`);
   const data = response.data.data;
   return data.name;

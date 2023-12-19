@@ -77,6 +77,7 @@ const AgreementForm = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
+
       <div>
         <label htmlFor="name">Nombre </label>
         <input autoComplete="off" {...register("name", { required: true } )} placeholder="Local de Comida" />
