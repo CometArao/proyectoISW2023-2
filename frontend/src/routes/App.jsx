@@ -1,4 +1,3 @@
-
 import ListAgreements from "../components/ListAgreements";
 
 function App() {
