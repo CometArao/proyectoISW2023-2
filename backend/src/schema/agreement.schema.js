@@ -1,5 +1,6 @@
 "use strict";
 
+// const mongoose = require("mongoose");
 const Joi = require("joi");
 const { Commune, Region } = require("../models/location.model");
 
@@ -11,6 +12,10 @@ const { Commune, Region } = require("../models/location.model");
  */
 const customValidateCommunes = async (value, helpers) => {
     try {
+        const isValid = mongoose.Types.ObjectId.isValid(value);
+        if (!isValid) {
+            return helpers.error("any.invalid");
+        }
         // Obtiene el objeto de la región asociada al convenio
         const region = await helpers.state.ancestors[0].region;
 
@@ -25,7 +30,6 @@ const customValidateCommunes = async (value, helpers) => {
             return helpers.error("any.invalid");
         }
     } catch (err) {
-        console.error(err);
         return helpers.error("any.invalid");
     }
 };
@@ -38,6 +42,10 @@ const customValidateCommunes = async (value, helpers) => {
  */
 const customValidateRegions = async (value, helpers) => {
     try {
+        // const isValid = mongoose.Types.ObjectId.isValid(value);
+        // if (!isValid) {
+        //     return helpers.error("any.invalid");
+        // }
         // Intenta encontrar una región con el _id proporcionado
         const region = await Region.findOne({ _id: value });
 
@@ -45,7 +53,6 @@ const customValidateRegions = async (value, helpers) => {
             return helpers.error("any.invalid");
         }
     } catch (error) {
-        console.error(error);
         return helpers.error("any.invalid");
     }
 };
@@ -68,6 +75,10 @@ const agreementBodySchema = Joi.object({
         "string.base": "La descripción debe ser de tipo string.",
         "string.min": "La descripción debe tener al menos {#limit} caracteres.",
         "string.max": "La descripción debe tener un máximo de {#limit} caracteres.",
+    }),
+    image: Joi.string().messages({
+        "string.empty": "La imagen no puede estar vacía.",
+        "string.base": "La imagen debe ser de tipo string.",
     }),
     benefit: Joi.string().required().max(200).messages({
         "string.empty": "El beneficio no puede estar vacío.",

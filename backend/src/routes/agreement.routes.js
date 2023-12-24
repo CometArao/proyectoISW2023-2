@@ -4,11 +4,11 @@
 const express = require("express");
 
 // Importa el middleware de autorización
-const {isAdmin} = require("../middlewares/authorization.middleware.js");
+const { isAdmin } = require("../middlewares/authorization.middleware.js");
 // Importa el middleware de autenticación
 const verifyJWT = require("../middlewares/authentication.middleware.js");
 // Importa middleware de imágenes
-const uploadImg = require("../config/configMulterImages.js");
+const { uploadImg } = require("../config/configMulterImages");
 
 const {
   getAgreements,
@@ -30,8 +30,8 @@ router.get("/region/:region/comuna/:commune", getAgreementsByRegionAndCommune);
 
 router.use(verifyJWT);
 // accesibles solo por administradores
-router.post("/", isAdmin, uploadImg.single('image'), createAgreement);
-router.put("/:id", isAdmin, uploadImg.single('image'), updateAgreement);
+router.post("/", isAdmin, uploadImg.single("image"), createAgreement);
+router.put("/:id", isAdmin, uploadImg.single("image"), updateAgreement);
 router.delete("/:id", isAdmin, deleteAgreement);
 
 module.exports = router;

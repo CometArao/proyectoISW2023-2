@@ -61,8 +61,8 @@ async function getAgreementsByRegion(req, res) {
 async function getAgreementsByRegionAndCommune(req, res) {
   try {
     const { params } = req;
-    //const { error: paramsError } = agreementIdSchema.validate(params);
-    //if (paramsError) return respondError(req, res, 400, paramsError.message);
+    // const { error: paramsError } = agreementIdSchema.validate(params);
+    // if (paramsError) return respondError(req, res, 400, paramsError.message);
 
     const [agreements, errorAgreements] =
       await AgreementService.getAgreementsByRegionAndCommune(
@@ -96,8 +96,8 @@ async function createAgreement(req, res) {
         // Verifica que se haya subido una imagen
         if (!file) {
             // Si no se proporciona una imagen, se utiliza la imagen default
-            body.image = 'default.jpg';
-        }else {
+            body.image = "default.jpg";
+        } else {
             // Si se proporciona una imagen, utiliza el nombre del archivo subido
             body.image = file.filename;
         }
@@ -158,7 +158,7 @@ async function updateAgreement(req, res) {
 
         // Eliminar la imagen anterior si se proporciona una nueva imagen
         if (file) {
-            if (existingAgreement.image !== 'default.jpg') {
+            if (existingAgreement.image !== "default.jpg") {
                 // Elimina la imagen anterior (excepto 'default.jpg')
                 fs.unlinkSync(`./src/data/images/${existingAgreement.image}`);
             }
