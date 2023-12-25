@@ -9,6 +9,7 @@ const AgreementForm = () => {
   const { register, handleSubmit, errors, setValue } = useForm();
   const [regions, setRegions] = useState([]);
   const [communes, setCommunes] = useState([]);
+  const [image, setImages] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,6 +31,10 @@ const AgreementForm = () => {
 
     fetchCommunes();
   }, []);
+
+  const handleImageChange = (e) => {
+    setImages(e.target.files[0]);
+  };
 
   const onRegionChange = async (event) => {
     const selectedRegionId = event.target.value;
@@ -55,28 +60,17 @@ const AgreementForm = () => {
   };
 
   const onSubmit = async (data) => {
-    // Mapear IDs a nombres antes de enviar al servidor
-    const regionIdName = await getRegionIdName(data.region);
-    const communeIdName = await getCommuneIdName(data.commune);
-  
-    if (regionIdName && communeIdName) {
-      data.region = regionIdName._id;
-      data.commune = communeIdName._id;
-      
       createAgreement(data).then(() => {
         navigate('/');
         console.log('Convenio creado');
       });
   
       // Enviar los datos al servidor
-      console.log(data);
-    } else {
-      console.error('Error al obtener información de región o comuna');
-    }
+      // console.log(data);
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
 
       <div>
         <label htmlFor="name">Nombre </label>
@@ -88,7 +82,7 @@ const AgreementForm = () => {
       </div>
       <div>
         <label htmlFor="image">Imagen/Logotipo </label>
-        <input type='file' {...register("image")} />
+        <input type='file' {...register("image")} onChange={handleImageChange}/>
       </div>
       <div>
         <label htmlFor="benefit">Beneficio </label>
