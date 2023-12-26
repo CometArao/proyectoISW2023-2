@@ -14,14 +14,9 @@ async function createSolicitud(solicitud) {
     const solicitudEncontrada = await Solicitud.findOne({
       Cliente: Solicitud.Cliente,
     });
-
-    if (solicitudEncontrada)
-      return [null, "El cliente ya habia solicitado antes"];
-
     if (solicitudEncontrada) {
         return [null, "El cliente ya habia solicitado antes"];
     }
-
 
     const nuevaSolicitud = new Solicitud({
       Cliente,
@@ -39,32 +34,6 @@ async function createSolicitud(solicitud) {
  * @returns {Promise} Promesa con el objeto de solicitudes
  **/
 async function getSolicitudes() {
-
-  try {
-    const solicitudes = await Solicitud.find();
-    if (!solicitudes) return [null, "No hay solicitudes"];
-    return [solicitudes, null];
-  } catch (error) {
-    handleError(error, "solicitud.service -> getSolicitudes");
-  }
-}
-/**
- * Obtiene una solicitud por su id
- * @param {string} Id de la solicitud
- * @returns {Promise} Promesa con el objeto de solicitud
- **/
-async function getSolicitudById(id) {
-  try {
-    const solicitud = await Solicitud.findById({ _id: id });
-    if (!solicitud) return [null, "La solicitud no existe"];
-
-    return [solicitud, null];
-  } catch (error) {
-    handleError(error, "solicitud.service -> getSolicitudById");
-  }
-}
-/**
-
     try {
         const solicitudes = await Solicitud.find();
         if (!solicitudes) return [null, "No hay solicitudes"];
@@ -91,27 +60,19 @@ async function getSolicitudById(id) {
    }
 
    /**
-
     Actualiza una solicitud por su id
     * @param {string} Id de la solicitud
     * @param {object} solicitud objeto de solicitud
     * @returns {Promise} Promesa con el objeto de solicitud actualizado
     **/
 async function updateEstadoById(id, solicitud) {
-
-  try {
-    const solicitudEncontrada = await Solicitud.findById({ _id: id });
-    if (!solicitudEncontrada) return [null, "La solicitud no existe"];
-
     try {
         const solicitudEncontrada = await Solicitud.findById({ _id: id });
         if (!solicitudEncontrada) return [null, "La solicitud no existe"];
 
-
-    if (solicitudEncontrada.Estado !== "Derivada") {
-      return [null, "Solo se pueden cambiar solicitudes con estado 'Derivada'"];
-    }
-
+        if (solicitudEncontrada.Estado !== "Derivada") {
+            return [null, "Solo se pueden cambiar solicitudes con estado 'Derivada'"];
+        }
 
 
         // Actualizar la solicitud con el nuevo estado
