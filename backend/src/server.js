@@ -49,8 +49,8 @@ async function setupServer() {
     server.use(morgan("dev"));
 
     // Configuración de rutas estáticas para las imágenes
-    server.use("/images", express.static(path.join(__dirname, "./data/images")));
-    // server.use("api/images", express.static(path.join(__dirname, "./data/images")));
+    // server.use("/images", express.static(path.join(__dirname, "./data/images")));
+    server.use("/api/images", express.static(path.join(__dirname, "./data/images")));
     // console.log("dirname: ", __dirname);
     
     // Agrega el middleware para el manejo de datos en formato URL
