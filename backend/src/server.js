@@ -35,7 +35,7 @@ async function setupServer() {
     server.use(express.json());
     // Agregamos los cors
 
-    server.use(cors({ origin: "*" }));
+    // server.use(cors({ origin: "*" }));
 
     // CONFIGURAR ESTE ARCHIVO AL MOMENTO DE SUBIR AL SERVIDOR
     // server.use(cors());
