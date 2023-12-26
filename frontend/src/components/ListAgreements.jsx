@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import { getData } from "../lib/getAgreements";
-import { getRegionName, getCommuneName } from "../lib/getNames";
+import { getAgreements } from "../services/agreements.service";
+import { getRegionName, getCommuneName } from "../lib/getNames"
 import { useNavigate } from 'react-router-dom';
 import axios from "../services/root.service"
+import NavBar from "./NavBar";
 
 const ListAgreements = () => {
   const [agreements, setAgreements] = useState([]);
@@ -10,7 +11,7 @@ const ListAgreements = () => {
   
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getData();
+      const data = await getAgreements();
       const agreementsWithNames = await Promise.all(
         data.map(async (agreement) => {
           const regionName = await getRegionName(agreement.region);
@@ -31,13 +32,21 @@ const ListAgreements = () => {
   }, []);
 
   return (
-    <div class="card" style="width: 18rem;">
-        <img src="..." class="card-img-top" alt="..."/>
-        <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div>
-    </div>
+    <>
+        <NavBar />
+        {agreements.map((agreement) => (
+            <div className="card" style={{ width: '18rem' }}>
+                <br/>
+                <img src="..." class="card-img-top" alt={agreement.image}/>
+                <div class="card-body" key={agreement.id}>
+                    <h5 class="card-title">{agreement.name}</h5>
+                    <p class="card-text">{agreement.description}</p>
+                    <a href="/" class="btn btn-primary">Conocer más</a>
+                </div>
+            </div>
+        ))}
+    </>
   );
 };
+
+export default ListAgreements;
