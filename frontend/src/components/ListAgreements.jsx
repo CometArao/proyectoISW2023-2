@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { getData } from "../lib/getAgreements";
 import { getRegionName, getCommuneName } from "../lib/getNames";
 import { useNavigate } from 'react-router-dom';
+import axios from "../services/root.service"
 
 const ListAgreements = () => {
   const [agreements, setAgreements] = useState([]);
@@ -19,6 +20,7 @@ const ListAgreements = () => {
             ...agreement,
             regionName,
             communeName,
+            // image: await axios.get(`/images/${agreement.image}`),
           };
         })
       );

@@ -8,7 +8,7 @@ const { isAdmin } = require("../middlewares/authorization.middleware.js");
 // Importa el middleware de autenticación
 const verifyJWT = require("../middlewares/authentication.middleware.js");
 // Importa middleware de imágenes
-const { uploadImg } = require("../config/configMulterImages");
+const uploadImg = require("../config/configMulterImages");
 
 const {
   getAgreements,
