@@ -26,9 +26,10 @@ function PageRoot() {
     <div>
       <NavBar />
       <div>
-        <h1>Portal Tarjeta Vecino</h1>
+        {/* <h1>Portal Tarjeta Vecino</h1> */}
+        <br />
         <p>Estas logeado como: {user.email}</p>
-        <button onClick={handleLogout}>Cerrar sesion</button>
+        {/* <button onClick={handleLogout}>Cerrar sesion</button> */}
         <hr />
         <br />
       </div>

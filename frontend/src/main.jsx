@@ -6,7 +6,7 @@ import Root from './routes/Root.jsx';
 import ErrorPage from './routes/ErrorPage.jsx';
 import Login from './routes/Login.jsx';
 import ListAgreements from './components/ListAgreements.jsx';
-// import AgreementForm from './components/AgreementsForm.jsx';
+import AgreementForm from './components/AgreementForm.jsx';
 
 const router = createBrowserRouter([
   {
@@ -18,10 +18,10 @@ const router = createBrowserRouter([
         path: '/',
         element: <App />,
       },
-      // {
-      //   path: '/convenios/crear',
-      //   element: <AgreementForm />,
-      // }
+      {
+        path: '/convenios/crear',
+        element: <AgreementForm />,
+      }
     ],
   },
   {

@@ -10,4 +10,22 @@ export const getAgreements = async () => {
     } catch (error) {
         console.log(error);
     }
+}
+
+export const createAgreement = async (agreement) => {
+    try {
+        const res = await axios.post('/convenios', agreement);
+        if (res.status === 201) {
+            return res.data.data;
+        }
+        return {};
+    } catch (error) {
+        if (error.response) {
+            // El servidor respondió con un código de error
+            console.log('Error de respuesta de server:', error.response.data);
+        } else {
+            // La solicitud no pudo llegar al servidor
+            console.log('Error enviando al server:', error.message);
+        }
     }
+}
