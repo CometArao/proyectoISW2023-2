@@ -1,31 +1,34 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { getAgreements } from "../services/agreements.service";
-import { getRegionName, getCommuneName } from "../lib/getNames"
-import { useNavigate } from 'react-router-dom';
-import axios from "../services/root.service"
+import { getRegionName, getCommuneName } from "../lib/getNames";
+import { useNavigate } from "react-router-dom";
+import axios from "../services/root.service";
 import NavBar from "./NavBar";
 
 const ListAgreements = () => {
   const [agreements, setAgreements] = useState([]);
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getAgreements();
-      const agreementsWithNames = await Promise.all(
-        data.map(async (agreement) => {
-          const regionName = await getRegionName(agreement.region);
-          const communeName = await getCommuneName(agreement.commune);
+      try {
+        const data = await getAgreements();
+        const agreementsWithNames = await Promise.all(
+          data.map(async (agreement) => {
+            const regionName = await getRegionName(agreement.region);
+            const communeName = await getCommuneName(agreement.commune);
 
-          return {
-            ...agreement,
-            regionName,
-            communeName,
-            // image: await axios.get(`/images/${agreement.image}`),
-          };
-        })
-      );
-      setAgreements(agreementsWithNames);
+            return {
+              ...agreement,
+              regionName,
+              communeName,
+            };
+          })
+        );
+        setAgreements(agreementsWithNames);
+      } catch (error) {
+        console.error("Error al obtener acuerdos:", error);
+      }
     };
 
     fetchData();
@@ -33,18 +36,33 @@ const ListAgreements = () => {
 
   return (
     <>
-        <NavBar />
-        {agreements.map((agreement) => (
-            <div className="card" style={{ width: '18rem' }}>
-                <br/>
-                <img src="..." class="card-img-top" alt={agreement.image}/>
-                <div class="card-body" key={agreement.id}>
-                    <h5 class="card-title">{agreement.name}</h5>
-                    <p class="card-text">{agreement.description}</p>
-                    <a href="/" class="btn btn-primary">Conocer más</a>
+      <NavBar />
+      <div className="container">
+        <br />
+        <button type="button" class="btn btn-outline-info">Modificar</button>
+        <br />
+        <br />
+        <div className="row">
+          {agreements.map((agreement) => (
+            <div className="col-sm-4 mb-3 mb-sm-4" key={agreement.id}>
+              <div className="card" style={{ width: "18rem" }}>
+                <br />
+                <img src={agreement.image} className="card-img-top" alt={agreement.name} />
+                <div className="card-body">
+                  <h5 className="card-title">{agreement.name}</h5>
+                  <h6 className="card-subtitle mb-2 text-body-secondary">
+                    {agreement.communeName}, {agreement.regionName}
+                  </h6>
+                  <p className="card-text">{agreement.description}</p>
+                  <a href="/" className="btn btn-outline-primary">
+                    Conocer más
+                  </a>
                 </div>
+              </div>
             </div>
-        ))}
+          ))}
+        </div>
+      </div>
     </>
   );
 };
