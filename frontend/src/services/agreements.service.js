@@ -13,23 +13,24 @@ export const getAgreements = async () => {
     }
 }
 
-export const createAgreement = async (agreement) => {
+export const createAgreement = async (data) => {
     try {
-        const res = await axios.post('/convenios', agreement);
-        if (res.status === 201) {
-            return res.data.data;
-        }
-        return {};
+      const response = await axios.post('/convenios', data);
+      if (response.status === 201) {
+        return response.data.data;
+      }
+      return {};
     } catch (error) {
-        if (error.response) {
-            // El servidor respondió con un código de error
-            console.log('Error de respuesta de server:', error.response.data);
-        } else {
-            // La solicitud no pudo llegar al servidor
-            console.log('Error enviando al server:', error.message);
-        }
+      if (error.response) {
+        // El servidor respondió con un código de error
+        console.log('Error de respuesta del servidor:', error.response.data);
+      } else {
+        // La solicitud no pudo llegar al servidor
+        console.log('Error al enviar al servidor:', error.message);
+      }
+      throw error; // Importante lanzar el error nuevamente para que el componente pueda manejarlo
     }
-}
+  };  
 
 export async function getImageAgreement(id) {
     try {

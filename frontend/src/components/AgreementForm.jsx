@@ -9,7 +9,7 @@ const AgreementForm = () => {
   const { register, handleSubmit, errors, setValue } = useForm();
   const [regions, setRegions] = useState([]);
   const [communes, setCommunes] = useState([]);
-  const [image, setImages] = useState(null);
+  const [image, setImage] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -33,7 +33,7 @@ const AgreementForm = () => {
   }, []);
 
   const handleImageChange = (e) => {
-    setImages(e.target.files[0]);
+    setImage(e.target.files[0]);
   };
 
   const onRegionChange = async (event) => {
@@ -60,14 +60,26 @@ const AgreementForm = () => {
   };
 
   const onSubmit = async (data) => {
-      createAgreement(data).then(() => {
-        navigate('/');
-        console.log('Convenio creado');
-      });
-  
-      // Enviar los datos al servidor
-      // console.log(data);
-  };
+  try {
+    const formData = new FormData();
+    formData.append("name", data.name);
+    formData.append("description", data.description);
+    formData.append("image", image); // Agrega la imagen al FormData
+    formData.append("benefit", data.benefit);
+    formData.append("region", data.region);
+    formData.append("commune", data.commune);
+    formData.append("exclusiveSeniors", data.exclusiveSeniors);
+    formData.append("exclusivePregnant", data.exclusivePregnant);
+    formData.append("exclusiveDisability", data.exclusiveDisability);
+
+    await createAgreement(formData);
+
+    navigate('/');
+    console.log('Convenio creado');
+  } catch (error) {
+    console.error("Error al crear el convenio:", error);
+  }
+};
 
   return (
     <div className="container">
