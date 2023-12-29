@@ -9,7 +9,7 @@ const AgreementForm = () => {
   const { register, handleSubmit, errors, setValue } = useForm();
   const [regions, setRegions] = useState([]);
   const [communes, setCommunes] = useState([]);
-  const [image, setImages] = useState([]);
+  const [image, setImages] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {

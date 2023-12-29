@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getAgreements } from "../services/agreements.service";
+import { getAgreements, getImageAgreement } from "../services/agreements.service";
 import { getRegionName, getCommuneName } from "../lib/getNames";
 import { useNavigate } from "react-router-dom";
 import axios from "../services/root.service";
@@ -17,17 +17,22 @@ const ListAgreements = () => {
           data.map(async (agreement) => {
             const regionName = await getRegionName(agreement.region);
             const communeName = await getCommuneName(agreement.commune);
+            console.log("agreement ", agreement.name);
+            console.log("agreement.image", agreement.image);
+            const imageBlob = await getImageAgreement(agreement.image);
+            // console.log("imageBlob", imageBlob);
 
             return {
               ...agreement,
               regionName,
               communeName,
+              image: URL.createObjectURL(imageBlob),
             };
           })
         );
         setAgreements(agreementsWithNames);
       } catch (error) {
-        console.error("Error al obtener acuerdos:", error);
+        console.error("Error al obtener convenios:", error);
       }
     };
 

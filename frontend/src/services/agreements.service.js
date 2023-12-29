@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import axios from "../services/root.service.js"
 
 export const getAgreements = async () => {
@@ -27,5 +28,26 @@ export const createAgreement = async (agreement) => {
             // La solicitud no pudo llegar al servidor
             console.log('Error enviando al server:', error.message);
         }
+    }
+}
+
+export async function getImageAgreement(id) {
+    try {
+        const response = await axios.get(`/images/${id}`, {
+            responseType: 'blob'
+        });
+        console.log("response ", response);
+        return response.data;
+        const response2 = await axios.get(`/images/${id}`);
+        console.log("response2 ", response2);
+    } catch (error) {
+        if (error.response.status === 404) {
+            const response = await axios.get(`/images/default.jpg`, {
+                responseType: 'blob'
+            });
+            console.log("CAMBIADA A DEFAULT")
+            return response.data;
+        }
+        console.log(error)
     }
 }
