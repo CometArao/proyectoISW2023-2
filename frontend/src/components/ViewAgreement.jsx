@@ -1,15 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { getAgreementByID } from "../services/agreements.service";
-import NavBar from "./NavBar";
 import { getRegionName, getCommuneName } from "../lib/getNames";
 import { getImageAgreement } from "../services/agreements.service";
+import { useNavigate } from "react-router-dom";
+import { deleteAgreement} from "../services/agreements.service";
+import NavBar from "./NavBar";
+import axios from "../services/root.service";
 
 var rol = null;
 
 const ViewAgreement = () => {
   const { _id } = useParams();
   const [agreement, setAgreement] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedAgreementId, setSelectedAgreementId] = useState(null);
+  const navigate = useNavigate();
 
   if (localStorage.getItem("user")) {
     var usuario = JSON.parse(localStorage.getItem('user'));
@@ -24,6 +30,7 @@ const ViewAgreement = () => {
         const regionName = await getRegionName(agreementData.region);
         const communeName = await getCommuneName(agreementData.commune);
         const imageBlob = await getImageAgreement(agreementData.image);
+
         agreementData.region= regionName;
         agreementData.commune = communeName;
         agreementData.image = URL.createObjectURL(imageBlob);
@@ -56,6 +63,33 @@ const ViewAgreement = () => {
       </>
     );
   }
+
+  const handleDeleteClick = async () => {
+    try {
+      await deleteAgreement(selectedAgreementId);
+    } catch (error) {
+      console.error("Error al eliminar convenio:", error);
+    } finally {
+      // Cerrar el modal
+      handleCloseDeleteModal();
+      // Actualizar la lista de convenios
+      navigate("/convenios");
+    };
+    };
+  const handleShowDeleteModal = (id) => {
+    setSelectedAgreementId(id);
+    setShowDeleteModal(true);
+  };
+  
+  
+  const handleCloseDeleteModal = () => {
+    setSelectedAgreementId(null);
+    setShowDeleteModal(false);
+  };
+
+  const handleBackClick = () => {
+    navigate("/convenios");
+  };
 
   return (
     <>
@@ -92,13 +126,31 @@ const ViewAgreement = () => {
                 {rol === "admin" && (
                     <container>
                         <button type="button" class="btn btn-outline-success">Editar</button>
-                        <button type="button" class="mx-2 btn btn-outline-danger">Eliminar</button>
+                        <button type="button" class="mx-2 btn btn-outline-danger" onClick={() => handleShowDeleteModal(agreement._id)}>Eliminar</button>
                     </container>
                 )}
                 <container class="sm">
-                    <button type="button" class="btn btn-outline-primary">Volver</button>
+                    <button type="button" class="btn btn-outline-primary" onClick={() => handleBackClick(agreement._id)}>Volver</button>
                 </container>
             </div>
+        </div>
+      </div>
+
+      <div className="modal" tabIndex="-1" role="dialog" style={{ display: showDeleteModal ? 'block' : 'none' }}>
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Eliminar Convenio</h5>
+              <button type="button" class="btn-close" aria-label="Close" onClick={handleCloseDeleteModal}></button>
+            </div>
+            <div class="modal-body">
+              <p>¿Está seguro de eliminar este convenio?</p>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onClick={handleCloseDeleteModal}>Cancelar</button>
+              <button type="button" class="btn btn-danger" onClick={handleDeleteClick}>Eliminar</button>
+            </div>
+          </div>
         </div>
       </div>
     </>
