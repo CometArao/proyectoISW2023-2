@@ -27,9 +27,17 @@ const NavBar = () => {
                     <Link class="nav-link" to="/convenios">Convenios</Link>
                     </li>
                 </ul>
-                <div className="ms-auto">
-                <button onClick={handleLogout} type="button" class="btn btn-outline-danger">Cerrar Sesión</button>
-                </div>
+                {localStorage.getItem("user") && (
+                    <div className="ms-auto">
+                    <button onClick={handleLogout} type="button" class="btn btn-outline-danger">Cerrar Sesión</button>
+                    </div>
+                )}
+
+                {localStorage.getItem("user") === null && (
+                    <div className="ms-auto">
+                    <Link to="/auth" type="button" class="btn btn-outline-primary">Iniciar Sesión</Link>
+                    </div>
+                )}
                 </div>
             </div>
         </nav>

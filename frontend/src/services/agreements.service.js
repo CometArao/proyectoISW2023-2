@@ -37,18 +37,30 @@ export async function getImageAgreement(id) {
         const response = await axios.get(`/images/${id}`, {
             responseType: 'blob'
         });
-        console.log("response ", response);
+        // console.log("response ", response);
         return response.data;
-        const response2 = await axios.get(`/images/${id}`);
-        console.log("response2 ", response2);
+        // const response2 = await axios.get(`/images/${id}`);
+        // console.log("response2 ", response2);
     } catch (error) {
         if (error.response.status === 404) {
             const response = await axios.get(`/images/default.jpg`, {
                 responseType: 'blob'
             });
-            console.log("CAMBIADA A DEFAULT")
+            // console.log("CAMBIADA A DEFAULT")
             return response.data;
         }
         console.log(error)
+    }
+}
+
+export const getAgreementByID = async (id) => {
+    try {
+        const response = await axios.get(`/convenios/${id}`);
+        const { status, data } = response;
+        if (status === 200) {
+            return data.data;
+        }
+    } catch (error) {
+        console.log(error);
     }
 }

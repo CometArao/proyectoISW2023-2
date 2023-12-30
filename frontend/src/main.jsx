@@ -7,6 +7,7 @@ import ErrorPage from './routes/ErrorPage.jsx';
 import Login from './routes/Login.jsx';
 import ListAgreements from './components/ListAgreements.jsx';
 import AgreementForm from './components/AgreementForm.jsx';
+import ViewAgreement from './components/ViewAgreement.jsx';
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
     path: '/convenios',
     element: <ListAgreements />,
   },
+  {
+    path: 'convenios/:_id',
+    element: <ViewAgreement />,
+  }
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(

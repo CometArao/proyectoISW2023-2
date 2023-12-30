@@ -21,3 +21,7 @@ a {
 li {
   list-style: none;
 }
+
+#requisitos {
+  list-style:initial;
+}
