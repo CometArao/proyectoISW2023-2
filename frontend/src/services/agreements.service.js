@@ -64,3 +64,16 @@ export const getAgreementByID = async (id) => {
         console.log(error);
     }
 }
+
+export const deleteAgreement = async (id) => {
+    try {
+        const response = await axios.delete(`/convenios/${id}`);
+        console.log("response ", response);
+        const { status, data } = response;
+        if (status === 200) {
+            return data.data;
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
