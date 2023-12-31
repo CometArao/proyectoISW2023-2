@@ -97,11 +97,15 @@ const EditAgreement = () => {
         }
       };
     
-      const onCommuneChange = (event) => {
+    const onCommuneChange = (event) => {
         console.log('Commune changed');
         // Actualizar el estado de la comuna seleccionada
         setValue("commune", event.target.value);
-      };
+    };
+
+    const handleCancel = () => {
+        navigate(`/convenios/${_id}`);
+    };
 
     if (!agreementData) {
         // Mostrar carga o mensaje de error
@@ -110,7 +114,7 @@ const EditAgreement = () => {
 
     return (
         <div className="container">
-            <h1>Editar Convenio</h1>
+            <h1>Modificar Convenio</h1>
             <form onSubmit={handleSubmit(handleUpdateSubmit)} encType="multipart/form-data">
     
             <div class="mb-3">
@@ -184,7 +188,8 @@ const EditAgreement = () => {
                 <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" {...register("exclusiveDisability")} />
             </div>
             <br/>
-            <div class=" gap-2 d-md-flex justify-content-md-end">
+            <div className="d-grid gap-2 d-md-flex justify-content-md-end">
+                <button type="button" class="btn btn-outline-secondary" onClick={handleCancel}>Cancelar</button>
                 <input type="submit" class="btn btn-outline-success" value={"Guardar Cambios"}/>
             </div>
             <hr />

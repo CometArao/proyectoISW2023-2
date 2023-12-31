@@ -81,8 +81,14 @@ const AgreementForm = () => {
   }
 };
 
+const handleCancel = () => {
+  navigate(`/convenios`);
+};
+
   return (
     <div className="container">
+      <h1>Crear Convenio</h1>
+      <br />
         <form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
 
         <div class="mb-3">
@@ -145,7 +151,10 @@ const AgreementForm = () => {
             <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" {...register("exclusiveDisability")} />
         </div>
         <br/>
-        <input type="submit" class="btn btn-outline-success"/>
+        <div className="d-grid gap-2 d-md-flex justify-content-md-end">
+            <button type="button" class="btn btn-outline-secondary" onClick={handleCancel}>Cancelar</button>
+            <input type="submit" class="btn btn-outline-success" value={"Crear"}/>
+        </div>
         <hr />
         </form>
     </div>

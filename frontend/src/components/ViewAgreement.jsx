@@ -75,7 +75,8 @@ const ViewAgreement = () => {
       // Actualizar la lista de convenios
       navigate("/convenios");
     };
-    };
+  };
+
   const handleShowDeleteModal = (id) => {
     setSelectedAgreementId(id);
     setShowDeleteModal(true);
@@ -89,6 +90,10 @@ const ViewAgreement = () => {
 
   const handleBackClick = () => {
     navigate("/convenios");
+  };
+
+  const handleEditClick = (id) => {
+    navigate(`/convenios/editar/${id}`);
   };
 
   return (
@@ -125,7 +130,7 @@ const ViewAgreement = () => {
                 {/* Renderizar botones según el rol del usuario */}
                 {rol === "admin" && (
                     <container>
-                        <button type="button" class="btn btn-outline-success">Editar</button>
+                        <button type="button" class="btn btn-outline-success"  onClick={() => handleEditClick(agreement._id)}>Modificar</button>
                         <button type="button" class="mx-2 btn btn-outline-danger" onClick={() => handleShowDeleteModal(agreement._id)}>Eliminar</button>
                     </container>
                 )}
