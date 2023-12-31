@@ -74,6 +74,10 @@ const ListAgreements = () => {
     navigate(`/convenios/${id}`);
   };
 
+  const handleEditClick = (id) => {
+    navigate(`/convenios/editar/${id}`);
+  };
+
   const handleDeleteClick = async () => {
     try {
       await deleteAgreement(selectedAgreementId);

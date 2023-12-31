@@ -158,12 +158,20 @@ async function updateAgreement(req, res) {
 
         // Eliminar la imagen anterior si se proporciona una nueva imagen
         if (file) {
-            if (existingAgreement.image !== 'default.jpg') {
-                // Elimina la imagen anterior (excepto 'default.jpg')
-                fs.unlinkSync(`./src/data/images/${existingAgreement.image}`);
-            }
-            // Asigna el nombre de la nueva imagen
-            existingAgreement.image = file.filename;
+          if (existingAgreement.image !== 'default.jpg') {
+              const imagePath = `./src/data/images/${existingAgreement.image}`;
+
+              // Verificar si el archivo existe antes de intentar eliminarlo
+              if (fs.existsSync(imagePath)) {
+                  // Elimina la imagen anterior (excepto 'default.jpg')
+                  fs.unlinkSync(imagePath);
+              } else {
+                  console.warn(`La imagen ${existingAgreement.image} no existe en el sistema de archivos.`);
+              }
+
+              // Asigna el nombre de la nueva imagen
+              existingAgreement.image = file.filename;
+          }
         }
 
         // Validar y actualizar otros campos del convenio

@@ -77,3 +77,21 @@ export const deleteAgreement = async (id) => {
         console.log(error);
     }
 }
+
+export const updateAgreement = async (id, formData) => {
+    try {
+        const response = await axios.put(`/convenios/${id}`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+        console.log("response ", response);
+        const { status, data } = response;
+        if (status === 200) {
+            return data.data;
+        }
+    } catch (error) {
+        console.log(error);
+        // Manejar errores...
+    }
+}

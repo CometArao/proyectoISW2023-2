@@ -8,6 +8,7 @@ import Login from './routes/Login.jsx';
 import ListAgreements from './components/ListAgreements.jsx';
 import AgreementForm from './components/AgreementForm.jsx';
 import ViewAgreement from './components/ViewAgreement.jsx';
+import EditAgreement from './components/EditAgreement.jsx';
 
 const router = createBrowserRouter([
   {
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
       {
         path: '/convenios/crear',
         element: <AgreementForm />,
+      },
+      {
+        path: '/convenios/editar/:_id',
+        element: <EditAgreement />,
       }
     ],
   },
