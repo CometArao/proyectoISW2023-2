@@ -129,10 +129,10 @@ const ViewAgreement = () => {
 
                 {/* Renderizar botones según el rol del usuario */}
                 {rol === "admin" && (
-                    <container>
+                    <containter>
                         <button type="button" class="btn btn-outline-success"  onClick={() => handleEditClick(agreement._id)}>Modificar</button>
                         <button type="button" class="mx-2 btn btn-outline-danger" onClick={() => handleShowDeleteModal(agreement._id)}>Eliminar</button>
-                    </container>
+                    </containter>
                 )}
                 <container class="sm">
                     <button type="button" class="btn btn-outline-primary" onClick={() => handleBackClick(agreement._id)}>Volver</button>

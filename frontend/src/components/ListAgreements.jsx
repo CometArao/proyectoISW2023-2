@@ -23,10 +23,15 @@ const ListAgreements = () => {
   const [loading, setLoading] = useState(true);
   const [regions, setRegions] = useState([]);
   const [communes, setCommunes] = useState([]);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const [selectedAgreementId, setSelectedAgreementId] = useState(null);
   const [selectedRegion, setSelectedRegion] = useState(null);
   const [selectedCommune, setSelectedCommune] = useState(null);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [selectedAgreementId, setSelectedAgreementId] = useState(null);
+  const [selectedExSeniors, setSelectedExSeniors] = useState("");
+  const [selectedExPregnants, setSelectedExPregnants] = useState("");
+  const [selectedExDisability, setSelectedExDisability] = useState("");
+
   const navigate = useNavigate();
 
   // console.log("usuario: ", localStorage.getItem('user'));
@@ -67,6 +72,19 @@ const ListAgreements = () => {
           data = await getAgreements();
         }
 
+        // Utilizar los filtros de exclusividad
+        // console.log("data en fetch", data);
+        // console.log("selectedExSeniors: ", typeof selectedExSeniors, selectedExSeniors);
+        if (selectedExSeniors !== "") {
+          data = data.filter((agreement) => agreement.exclusiveSeniors === (selectedExSeniors === "true"));
+        }
+        if (selectedExPregnants !== "") {
+          data = data.filter((agreement) => agreement.exclusivePregnant === (selectedExPregnants === "true"));
+        }
+        if (selectedExDisability !== "") {
+          data = data.filter((agreement) => agreement.exclusiveDisability === (selectedExDisability === "true"));
+        }
+
         const agreementsWithNames = await Promise.all(
           data.map(async (agreement) => {
             const regionName = await getRegionName(agreement.region);
@@ -89,7 +107,7 @@ const ListAgreements = () => {
     };
 
     fetchData();
-  }, [selectedRegion, selectedCommune]);
+  }, [selectedRegion, selectedCommune, selectedExSeniors, selectedExPregnants, selectedExDisability]);
 
   // handles
   // NAVIGATE PARA IR A LA VISTA DE UN CONVENIO
@@ -166,7 +184,20 @@ const ListAgreements = () => {
     setSelectedCommune(communeValue);
   };
 
+  // Filtros por exclusividad
+  const handleSelectedExSeniorsChange = (event) => {
+    console.log("entrando a handleSelectedExSeniorsChange");
+    console.log("event.target.value: ", event.target.value);
+    setSelectedExSeniors(event.target.value);
+  };
 
+  const handleSelectedExPregnantsChange = (event) => {
+    setSelectedExPregnants(event.target.value);
+  };
+
+  const handleSelectedExDisabilityChange = (event) => {
+    setSelectedExDisability(event.target.value);
+  };
 
   return (
     <>
@@ -174,37 +205,102 @@ const ListAgreements = () => {
       <div className="container">
         <br />
         <br />
-        {loading && <Spinner />}
 
         <div className="row">
-          <div className="col-md-3 mb-3">
-              <label htmlFor="region">Filtrar por Región:</label>
-              <select id="region" className="form-select" onChange={handleRegionChange} value={selectedRegion || ""}>
-                <option value="">Todas las Regiones</option>
-                {regions.map((region) => (
-                <option key={region._id} value={region._id}>
-                {region.name}
-                </option>
-                ))}
-              </select>
+          {/* Filtros de Región y Comuna en una sola fila */}
+          <div className="col-md-6 mb-3">
+            <div className="row">
+              <div className="col-md-6 mb-3">
+                <label htmlFor="region">Filtrar por Región:</label>
+                <select
+                  id="region"
+                  className="form-select"
+                  onChange={handleRegionChange}
+                  value={selectedRegion || ""}
+                >
+                  <option value="">Todas las Regiones</option>
+                  {regions.map((region) => (
+                    <option key={region._id} value={region._id}>
+                      {region.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="col-md-6 mb-3">
+                <label htmlFor="commune">Filtrar por Comuna:</label>
+                <select
+                  id="commune"
+                  className="form-select"
+                  onChange={handleCommuneChange}
+                  value={selectedCommune || ""}
+                >
+                  <option value="">Todas las Comunas</option>
+                  {communes.map((commune) => (
+                    <option key={commune._id} value={commune._id}>
+                      {commune.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
           </div>
+
           <div className="col-md-3 mb-3">
-            <label htmlFor="commune">Filtrar por Comuna:</label>
-            <select id="commune" className="form-select" onChange={handleCommuneChange} value={selectedCommune || ""}>
-              <option value="">Todas las Comunas</option>
-              {communes.map((commune) => (
-                <option key={commune._id} value={commune._id}>
-                {commune.name}
-                </option>
-            ))}
+            <label htmlFor="selectedExSeniors">Filtrar por Adultos Mayores:</label>
+            <select
+              id="selectedExSeniors"
+              className="form-select"
+              onChange={handleSelectedExSeniorsChange}
+              value={selectedExSeniors.toString()}
+            >
+              <option value="">
+                -- No Aplicar --
+              </option>
+              <option value="true">Sí</option>
+              <option value="false">No</option>
             </select>
           </div>
+
+          <div className="col-md-3 mb-3">
+            <label htmlFor="selectedExPregnants">Filtrar por Personas Gestantes:</label>
+            <select
+              id="selectedExPregnants"
+              className="form-select"
+              onChange={handleSelectedExPregnantsChange}
+              value={selectedExPregnants.toString()}
+            >
+              <option value="">
+                -- No Aplicar --
+              </option>
+              <option value="true">Sí</option>
+              <option value="false">No</option>
+            </select>
+          </div>
+
+          <div className="col-md-3 mb-3">
+            <label htmlFor="selectedExDisability">Filtrar por Personas en Discapacidad:</label>
+            <select
+              id="selectedExDisability"
+              className="form-select"
+              onChange={handleSelectedExDisabilityChange}
+              value={selectedExDisability.toString()}
+            >
+              <option value="">
+                -- No Aplicar --
+              </option>
+              <option value="true">Sí</option>
+              <option value="false">No</option>
+            </select>
+          </div>
+
           <br />
           {rol === "admin" && (
             <button className="btn btn-outline-primary my-5" onClick={() => handleCreateClick()}>
               Crear Convenio
             </button>
           )}
+
+          {loading && <Spinner />}
 
           {agreements.map((agreement) => (
             <div className="col-sm-4 mb-3 mb-sm-4" key={agreement._id}>

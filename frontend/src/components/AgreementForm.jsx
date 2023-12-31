@@ -72,9 +72,10 @@ const AgreementForm = () => {
     formData.append("exclusivePregnant", data.exclusivePregnant);
     formData.append("exclusiveDisability", data.exclusiveDisability);
 
+    console.log("imagen", image);
     await createAgreement(formData);
 
-    navigate('/');
+    navigate('/convenios');
     console.log('Convenio creado');
   } catch (error) {
     console.error("Error al crear el convenio:", error);
@@ -153,7 +154,7 @@ const handleCancel = () => {
         <br/>
         <div className="d-grid gap-2 d-md-flex justify-content-md-end">
             <button type="button" class="btn btn-outline-secondary" onClick={handleCancel}>Cancelar</button>
-            <input type="submit" class="btn btn-outline-success" value={"Crear"}/>
+            <input type="submit" class="btn btn-outline-primary" value={"Crear"}/>
         </div>
         <hr />
         </form>

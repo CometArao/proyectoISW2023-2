@@ -158,11 +158,11 @@ async function updateAgreement(req, res) {
 
         // Eliminar la imagen anterior si se proporciona una nueva imagen
         if (file) {
-          if (existingAgreement.image !== 'default.jpg') {
+          if (existingAgreement.image) {
               const imagePath = `./src/data/images/${existingAgreement.image}`;
 
               // Verificar si el archivo existe antes de intentar eliminarlo
-              if (fs.existsSync(imagePath)) {
+              if (fs.existsSync(imagePath) && existingAgreement.image !== 'default.jpg') {
                   // Elimina la imagen anterior (excepto 'default.jpg')
                   fs.unlinkSync(imagePath);
               } else {
