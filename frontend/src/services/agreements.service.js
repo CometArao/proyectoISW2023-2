@@ -24,6 +24,7 @@ export const createAgreement = async (data) => {
       if (error.response) {
         // El servidor respondió con un código de error
         console.log('Error de respuesta del servidor:', error.response.data);
+        return error.response.data;
       } else {
         // La solicitud no pudo llegar al servidor
         console.log('Error al enviar al servidor:', error.message);

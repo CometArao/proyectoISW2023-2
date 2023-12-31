@@ -4,12 +4,14 @@ import { useNavigate } from 'react-router-dom';
 import { getRegionIdName, getCommuneIdName } from '../lib/getNames';
 import { useState, useEffect } from 'react';
 import axios from "../services/root.service"
+import { set } from 'lodash';
 
 const AgreementForm = () => {
   const { register, handleSubmit, errors, setValue } = useForm();
   const [regions, setRegions] = useState([]);
   const [communes, setCommunes] = useState([]);
   const [image, setImage] = useState(null);
+  const [errorAgreement, setErrorAgreement] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -72,11 +74,18 @@ const AgreementForm = () => {
     formData.append("exclusivePregnant", data.exclusivePregnant);
     formData.append("exclusiveDisability", data.exclusiveDisability);
 
-    console.log("imagen", image);
-    await createAgreement(formData);
+    // console.log("imagen", image);
 
-    navigate('/convenios');
-    console.log('Convenio creado');
+    await createAgreement(formData).then((response) => {
+      if (response.state === "Error") {
+        setErrorAgreement(response.message);
+      } else {
+        navigate("/convenios");
+      }
+    });;
+
+    // navigate('/convenios');
+    // console.log('Convenio creado');
   } catch (error) {
     console.error("Error al crear el convenio:", error);
   }
@@ -152,6 +161,13 @@ const handleCancel = () => {
             <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" {...register("exclusiveDisability")} />
         </div>
         <br/>
+
+        {/* <div className="alert alert-danger" role="alert">
+            {errorAgreement}
+        </div> */}
+        
+        {errorAgreement && <div className="alert alert-danger" role="alert">{errorAgreement}</div>}
+
         <div className="d-grid gap-2 d-md-flex justify-content-md-end">
             <button type="button" class="btn btn-outline-secondary" onClick={handleCancel}>Cancelar</button>
             <input type="submit" class="btn btn-outline-primary" value={"Crear"}/>
