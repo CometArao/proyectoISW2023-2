@@ -1,4 +1,3 @@
-import { AxiosError } from "axios";
 import axios from "../services/root.service.js"
 
 export const getAgreements = async () => {
@@ -80,19 +79,27 @@ export const deleteAgreement = async (id) => {
 }
 
 export const updateAgreement = async (id, formData) => {
+    // console.log("ENTRA A UPDATE")
     try {
         const response = await axios.put(`/convenios/${id}`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
         });
-        console.log("response ", response);
+        // console.log("response dentro de try", response);
         const { status, data } = response;
         if (status === 200) {
             return data.data;
         }
     } catch (error) {
-        console.log(error);
-        // Manejar errores...
+        if (error.response) {
+            // El servidor respondió con un código de error
+            // console.log('Error de respuesta del servidor:', error.response.data);
+            return error.response.data;
+          } else {
+            // La solicitud no pudo llegar al servidor
+            console.log('Error al enviar al servidor:', error.message);
+          }
+          throw error; // Importante lanzar el error nuevamente para que el componente pueda manejarlo
     }
 }

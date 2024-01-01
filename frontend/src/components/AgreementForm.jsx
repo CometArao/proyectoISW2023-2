@@ -82,7 +82,7 @@ const AgreementForm = () => {
       } else {
         navigate("/convenios");
       }
-    });;
+    });
 
     // navigate('/convenios');
     // console.log('Convenio creado');

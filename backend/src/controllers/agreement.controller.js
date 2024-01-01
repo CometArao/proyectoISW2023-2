@@ -61,8 +61,8 @@ async function getAgreementsByRegion(req, res) {
 async function getAgreementsByRegionAndCommune(req, res) {
   try {
     const { params } = req;
-    //const { error: paramsError } = agreementIdSchema.validate(params);
-    //if (paramsError) return respondError(req, res, 400, paramsError.message);
+    // const { error: paramsError } = agreementIdSchema.validate(params);
+    // if (paramsError) return respondError(req, res, 400, paramsError.message);
 
     const [agreements, errorAgreements] =
       await AgreementService.getAgreementsByRegionAndCommune(
@@ -90,6 +90,7 @@ async function createAgreement(req, res) {
     try {
         const { body, file } = req; // Obtiene los datos del convenio y la imagen
 
+        // Valida datos del convenio
         const { error: bodyError } = agreementBodySchema.validate(body);
         if (bodyError) return respondError(req, res, 400, bodyError.message);
 
@@ -97,7 +98,7 @@ async function createAgreement(req, res) {
         if (!file) {
             // Si no se proporciona una imagen, se utiliza la imagen default
             body.image = 'default.jpg';
-        }else {
+        } else {
             // Si se proporciona una imagen, utiliza el nombre del archivo subido
             body.image = file.filename;
         }
@@ -145,10 +146,17 @@ async function getAgreementById(req, res) {
  * @param {Object} res - Objeto de respuesta
  */
 async function updateAgreement(req, res) {
+  // console.log("ENTRA A CONTROLLER");
     try {
         const { params, body, file } = req;
+        
         const { error: paramsError } = agreementIdSchema.validate(params);
         if (paramsError) return respondError(req, res, 400, paramsError.message);
+
+        // valida schema de convenio
+        const { error: bodyError } = agreementBodySchema.validate(body);
+        // console.log("BODY ERROR: ", bodyError && !bodyError.message.includes("imagen"));
+        if (bodyError && !bodyError.message.includes("imagen")) return respondError(req, res, 400, bodyError.message);
 
         // Verificar si el convenio con el ID proporcionado existe
         const existingAgreement = await Agreement.findById(params.id);

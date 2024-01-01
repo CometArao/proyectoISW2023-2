@@ -5,7 +5,6 @@ import { useParams } from 'react-router-dom';
 import { getAgreementByID, updateAgreement } from '../services/agreements.service';
 import axios from "../services/root.service"
 import { useNavigate } from 'react-router-dom'
-import { values } from 'lodash';
 
 const EditAgreement = () => {
     const { _id } = useParams();
@@ -14,6 +13,7 @@ const EditAgreement = () => {
     const [communes, setCommunes] = useState([]);
     const [image, setImage] = useState(null);
     const [agreementData, setAgreementData] = useState(null);
+    const [errorAgreement, setErrorAgreement] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -65,8 +65,13 @@ const EditAgreement = () => {
             // Agregar la imagen al objeto FormData
             formData.append('image', image);
     
-            await updateAgreement(_id, formData);
-            navigate(`/convenios/${_id}`);
+            await updateAgreement(_id, formData).then((response) => {
+                if (response.state === "Error"){
+                    setErrorAgreement(response.message)
+                } else {
+                    navigate(`/convenios/${_id}`);
+                }
+            });
         } catch (error) {
             console.error('Error al actualizar el convenio:', error);
             // Manejar errores...
@@ -187,6 +192,9 @@ const EditAgreement = () => {
                 <label class="form-check-label" for="flexCheckDefault" htmlFor="exclusiveDisability">Discapacidad </label>
                 <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" {...register("exclusiveDisability")} />
             </div>
+
+            {errorAgreement && <div className="alert alert-danger" role="alert">{errorAgreement}</div>}
+
             <br/>
             <div className="d-grid gap-2 d-md-flex justify-content-md-end">
                 <button type="button" class="btn btn-outline-secondary" onClick={handleCancel}>Cancelar</button>
