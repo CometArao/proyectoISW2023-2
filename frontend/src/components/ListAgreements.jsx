@@ -203,49 +203,57 @@ const ListAgreements = () => {
     <>
       <NavBar />
       <div className="container">
-        <br />
-        <br />
+        <br/>
+        <br/>
+        
+        <div className="row text-center">
+          <h1 className="mb-4">Convenios</h1>
+            {rol === "admin" && (
+              <button className="btn btn-outline-primary mb-4" onClick={() => handleCreateClick()}>
+                Crear Convenio
+              </button>
+            )}
+        <div/>
 
         <div className="row">
           {/* Filtros de Región y Comuna en una sola fila */}
           <div className="col-md-6 mb-3">
-            <div className="row">
-              <div className="col-md-6 mb-3">
-                <label htmlFor="region">Filtrar por Región:</label>
-                <select
-                  id="region"
-                  className="form-select"
-                  onChange={handleRegionChange}
-                  value={selectedRegion || ""}
-                >
-                  <option value="">Todas las Regiones</option>
-                  {regions.map((region) => (
-                    <option key={region._id} value={region._id}>
-                      {region.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="col-md-6 mb-3">
-                <label htmlFor="commune">Filtrar por Comuna:</label>
-                <select
-                  id="commune"
-                  className="form-select"
-                  onChange={handleCommuneChange}
-                  value={selectedCommune || ""}
-                >
-                  <option value="">Todas las Comunas</option>
-                  {communes.map((commune) => (
-                    <option key={commune._id} value={commune._id}>
-                      {commune.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
+            <label htmlFor="region">Filtrar por Región:</label>
+            <select
+              id="region"
+              className="form-select"
+              onChange={handleRegionChange}
+              value={selectedRegion || ""}
+            >
+              <option value="">Todas las Regiones</option>
+              {regions.map((region) => (
+                <option key={region._id} value={region._id}>
+                  {region.name}
+                </option>
+              ))}
+            </select>
           </div>
+          <div className="col-md-6 mb-5">
+            <label htmlFor="commune">Filtrar por Comuna:</label>
+            <select
+              id="commune"
+              className="form-select"
+              onChange={handleCommuneChange}
+              value={selectedCommune || ""}
+            >
+              <option value="">Todas las Comunas</option>
+              {communes.map((commune) => (
+                <option key={commune._id} value={commune._id}>
+                  {commune.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
 
-          <div className="col-md-3 mb-3">
+        {/* Filtros de Adultos Mayores, Personas Gestantes y Personas en Discapacidad en filas separadas */}
+        <div className="row">
+          <div className="col-md-4 mb-5">
             <label htmlFor="selectedExSeniors">Filtrar por Adultos Mayores:</label>
             <select
               id="selectedExSeniors"
@@ -261,7 +269,7 @@ const ListAgreements = () => {
             </select>
           </div>
 
-          <div className="col-md-3 mb-3">
+          <div className="col-md-4 mb-3">
             <label htmlFor="selectedExPregnants">Filtrar por Personas Gestantes:</label>
             <select
               id="selectedExPregnants"
@@ -277,7 +285,7 @@ const ListAgreements = () => {
             </select>
           </div>
 
-          <div className="col-md-3 mb-3">
+          <div className="col-md-4 mb-3">
             <label htmlFor="selectedExDisability">Filtrar por Personas en Discapacidad:</label>
             <select
               id="selectedExDisability"
@@ -292,13 +300,7 @@ const ListAgreements = () => {
               <option value="false">No</option>
             </select>
           </div>
-
-          <br />
-          {rol === "admin" && (
-            <button className="btn btn-outline-primary my-5" onClick={() => handleCreateClick()}>
-              Crear Convenio
-            </button>
-          )}
+        </div>
 
           {loading && <Spinner />}
 
